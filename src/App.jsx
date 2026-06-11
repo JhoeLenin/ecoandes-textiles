@@ -1,8 +1,10 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { CartProvider } from './context/CartContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import AdminLayout from './components/AdminLayout';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import Product from './pages/Product';
@@ -12,6 +14,14 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import Shipping from './pages/Shipping';
 import NotFound from './pages/NotFound';
+import Login from './pages/Login';
+import Dashboard from './pages/admin/Dashboard';
+import Products from './pages/admin/Products';
+import Categories from './pages/admin/Categories';
+import Offers from './pages/admin/Offers';
+import Orders from './pages/admin/Orders';
+import Users from './pages/admin/Users';
+import { Toaster } from 'react-hot-toast';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -21,27 +31,49 @@ function ScrollToTop() {
   return null;
 }
 
+function PublicLayout() {
+  return (
+    <>
+      <Header />
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/tienda" element={<Shop />} />
+          <Route path="/producto/:id" element={<Product />} />
+          <Route path="/carrito" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/nosotros" element={<About />} />
+          <Route path="/contacto" element={<Contact />} />
+          <Route path="/envios" element={<Shipping />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+      <Footer />
+    </>
+  );
+}
+
 export default function App() {
   return (
     <BrowserRouter>
-      <CartProvider>
-        <ScrollToTop />
-        <Header />
-        <main>
+      <AuthProvider>
+        <CartProvider>
+          <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
+          <ScrollToTop />
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/tienda" element={<Shop />} />
-            <Route path="/producto/:id" element={<Product />} />
-            <Route path="/carrito" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/nosotros" element={<About />} />
-            <Route path="/contacto" element={<Contact />} />
-            <Route path="/envios" element={<Shipping />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="productos" element={<Products />} />
+              <Route path="categorias" element={<Categories />} />
+              <Route path="ofertas" element={<Offers />} />
+              <Route path="pedidos" element={<Orders />} />
+              <Route path="usuarios" element={<Users />} />
+            </Route>
+            <Route path="/*" element={<PublicLayout />} />
           </Routes>
-        </main>
-        <Footer />
-      </CartProvider>
+        </CartProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

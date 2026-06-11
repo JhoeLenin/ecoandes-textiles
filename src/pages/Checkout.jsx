@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 import {
   getProduct, formatPrice, shippingCost, DEPARTAMENTOS,
 } from '../data/products';
 import { useCart } from '../context/CartContext';
+import toast from 'react-hot-toast';
 
 const PAYMENT_METHODS = [
   {
@@ -29,9 +32,10 @@ const PAYMENT_METHODS = [
 ];
 
 export default function Checkout() {
-  const { cart, subtotal, clearCart, showToast } = useCart();
+  const { cart, subtotal, clearCart } = useCart();
   const [departamento, setDepartamento] = useState('');
   const [confirmed, setConfirmed] = useState(null);
+  const [saving, setSaving] = useState(false);
 
   const shipping = shippingCost(subtotal, departamento || null);
   const free = shipping === 0 && subtotal > 0;
@@ -64,17 +68,61 @@ export default function Checkout() {
     );
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
     if (!form.reportValidity()) return;
     if (!form.pago.value) {
-      showToast('Selecciona un método de pago');
+      toast.error('Selecciona un método de pago');
       return;
     }
-    const nombre = form.nombre.value.trim();
-    clearCart();
-    setConfirmed(nombre);
+
+    setSaving(true);
+    try {
+      const items = cart.map((i) => {
+        const p = getProduct(i.id);
+        return {
+          id: i.id,
+          name: p?.name || i.id,
+          price: p?.priceOffer || 0,
+          qty: i.qty,
+        };
+      });
+
+      await addDoc(collection(db, 'orders'), {
+        customer: {
+          name: form.nombre.value.trim(),
+          email: form.email.value.trim(),
+          phone: form.telefono.value.trim(),
+          address: form.direccion.value.trim(),
+          distrito: form.distrito.value.trim(),
+          departamento: form.departamento.value,
+        },
+        items,
+        paymentMethod: form.pago.value,
+        subtotal,
+        shipping,
+        total: subtotal + shipping,
+        status: 'pendiente',
+        createdAt: new Date().toISOString(),
+      });
+
+      await addDoc(collection(db, 'users'), {
+        name: form.nombre.value.trim(),
+        email: form.email.value.trim(),
+        phone: form.telefono.value.trim(),
+        role: 'cliente',
+        createdAt: new Date().toISOString(),
+      }).catch(() => {});
+
+      clearCart();
+      setConfirmed(form.nombre.value.trim());
+      toast.success('Pedido registrado exitosamente');
+    } catch (err) {
+      toast.error('Error al registrar pedido: ' + err.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -129,8 +177,8 @@ export default function Checkout() {
               ))}
             </div>
 
-            <button type="submit" className="btn btn-primary btn-block btn-lg">
-              Confirmar Pedido
+            <button type="submit" className="btn btn-primary btn-block btn-lg" disabled={saving}>
+              {saving ? 'Registrando pedido...' : 'Confirmar Pedido'}
             </button>
           </form>
 
