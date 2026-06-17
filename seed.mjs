@@ -1,14 +1,25 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, doc, setDoc, addDoc } from 'firebase/firestore';
 
+// Credenciales desde .env (NO hardcodear). Ejecutar con:
+//   node --env-file=.env seed.mjs
 const firebaseConfig = {
-  apiKey: 'AIzaSyCgWhNdkhZL6MgeU-YMJcv9XFd8WA3fjAg',
-  authDomain: 'ecoandes-textiles.firebaseapp.com',
-  projectId: 'ecoandes-textiles',
-  storageBucket: 'ecoandes-textiles.firebasestorage.app',
-  messagingSenderId: '401225248428',
-  appId: '1:401225248428:web:a33699cadedd3d43223909',
+  apiKey: process.env.VITE_FIREBASE_API_KEY,
+  authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.VITE_FIREBASE_APP_ID,
 };
+
+const missing = Object.entries(firebaseConfig)
+  .filter(([, v]) => !v)
+  .map(([k]) => k);
+if (missing.length) {
+  console.error(`Faltan variables de entorno: ${missing.join(', ')}`);
+  console.error('Ejecuta con: node --env-file=.env seed.mjs');
+  process.exit(1);
+}
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
