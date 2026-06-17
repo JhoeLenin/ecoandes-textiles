@@ -21,6 +21,12 @@ import Categories from './pages/admin/Categories';
 import Offers from './pages/admin/Offers';
 import Orders from './pages/admin/Orders';
 import Users from './pages/admin/Users';
+import Clientes from './pages/admin/Clientes';
+import Campanas from './pages/admin/Campanas';
+import Reclamos from './pages/admin/Reclamos';
+import Sugerencias from './pages/admin/Sugerencias';
+import ReportesCRM from './pages/admin/ReportesCRM';
+import SeedDb from './pages/admin/SeedDb';
 import { Toaster } from 'react-hot-toast';
 
 function ScrollToTop() {
@@ -69,6 +75,12 @@ export default function App() {
               <Route path="ofertas" element={<Offers />} />
               <Route path="pedidos" element={<Orders />} />
               <Route path="usuarios" element={<Users />} />
+              <Route path="clientes" element={<Clientes />} />
+              <Route path="campanas" element={<Campanas />} />
+              <Route path="reclamos" element={<Reclamos />} />
+              <Route path="sugerencias" element={<Sugerencias />} />
+              <Route path="reportes" element={<ReportesCRM />} />
+            <Route path="seed" element={<SeedDb />} />
             </Route>
             <Route path="/*" element={<PublicLayout />} />
           </Routes>

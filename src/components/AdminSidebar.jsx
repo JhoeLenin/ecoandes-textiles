@@ -9,6 +9,12 @@ const links = [
   { to: '/admin/ofertas', icon: 'fa-percent', label: 'Ofertas' },
   { to: '/admin/pedidos', icon: 'fa-receipt', label: 'Pedidos' },
   { to: '/admin/usuarios', icon: 'fa-users', label: 'Usuarios' },
+  { to: '/admin/clientes', icon: 'fa-address-book', label: 'Clientes' },
+  { to: '/admin/campanas', icon: 'fa-bullhorn', label: 'Campañas' },
+  { to: '/admin/reclamos', icon: 'fa-triangle-exclamation', label: 'Reclamos' },
+  { to: '/admin/sugerencias', icon: 'fa-lightbulb', label: 'Sugerencias' },
+  { to: '/admin/reportes', icon: 'fa-chart-pie', label: 'Reportes CRM' },
+  { to: '/admin/seed', icon: 'fa-database', label: 'Poblar DB' },
 ];
 
 export default function AdminSidebar() {
