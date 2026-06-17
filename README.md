@@ -89,7 +89,7 @@ Enums compartidos en `src/data/crm.js`.
 
 Reparto de módulos y reglas en:
 - [`docs/DEV-JHOEL.md`](docs/DEV-JHOEL.md)
-- [`docs/DEV-COMPANERA.md`](docs/DEV-COMPANERA.md)
+- [`docs/DEV-AMORCITO.md`](docs/DEV-AMORCITO.md)
 
 ## Seguridad
 

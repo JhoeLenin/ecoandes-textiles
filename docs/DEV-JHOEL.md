@@ -85,4 +85,4 @@ reclamos abiertos. Reusa los hooks. No rompas las stats de ecommerce ya existent
 5. `master` siempre debe compilar (`npm run build`)
 
 ## Esquema de datos (referencia)
-Ver `docs/DEV-COMPANERA.md` — mismo esquema compartido.
+Ver `docs/DEV-AMORCITO.md` — mismo esquema compartido.
