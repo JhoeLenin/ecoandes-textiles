@@ -2,12 +2,20 @@ import { useProducts } from '../../hooks/useProducts';
 import { useOrders } from '../../hooks/useOrders';
 import { useCategories } from '../../hooks/useCategories';
 import { useUsers } from '../../hooks/useUsers';
+import { useClientes } from '../../hooks/useClientes';
+import { useCampanas } from '../../hooks/useCampanas';
+import { useReclamos } from '../../hooks/useReclamos';
+import { useSugerencias } from '../../hooks/useSugerencias';
 
 export default function Dashboard() {
   const { products } = useProducts();
   const { orders } = useOrders();
   const { categories } = useCategories();
   const { users } = useUsers();
+  const { clientes } = useClientes();
+  const { campanas } = useCampanas();
+  const { reclamos } = useReclamos();
+  const { sugerencias } = useSugerencias();
 
   const lowStock = products.filter((p) => p.stock <= 10);
   const todayOrders = orders.filter((o) => {
@@ -19,6 +27,17 @@ export default function Dashboard() {
     .filter((o) => o.status !== 'cancelado')
     .reduce((s, o) => s + (o.total || 0), 0);
   const pendingOrders = orders.filter((o) => o.status === 'pendiente');
+
+  const activeCampanas = campanas.filter((c) => c.status === 'activa');
+  const openReclamos = reclamos.filter((r) => r.status !== 'resuelto');
+  const newSugerencias = sugerencias.filter((s) => s.status === 'nueva');
+
+  const crmStats = [
+    { label: 'Clientes', value: clientes.length, icon: 'fa-address-book', color: 'var(--terracotta)' },
+    { label: 'Campañas activas', value: activeCampanas.length, icon: 'fa-bullhorn', color: 'var(--sage)' },
+    { label: 'Reclamos abiertos', value: openReclamos.length, icon: 'fa-triangle-exclamation', color: 'var(--gold)' },
+    { label: 'Sugerencias nuevas', value: newSugerencias.length, icon: 'fa-lightbulb', color: 'var(--forest)' },
+  ];
 
   const stats = [
     { label: 'Productos', value: products.length, icon: 'fa-box', color: 'var(--terracotta)' },
@@ -45,6 +64,23 @@ export default function Dashboard() {
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="admin-section">
+        <h2><i className="fa-solid fa-users-gear" /> CRM</h2>
+        <div className="stats-grid">
+          {crmStats.map((s) => (
+            <div key={s.label} className="stat-card">
+              <div className="stat-icon" style={{ background: s.color }}>
+                <i className={`fa-solid ${s.icon}`} />
+              </div>
+              <div className="stat-info">
+                <span className="stat-value">{s.value}</span>
+                <span className="stat-label">{s.label}</span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {lowStock.length > 0 && (
