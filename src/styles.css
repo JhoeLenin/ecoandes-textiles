@@ -2154,6 +2154,24 @@ textarea:focus {
   white-space: nowrap;
 }
 
+.admin-filters {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.filter-count {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.cell-sub {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
 .btn-icon {
   background: none;
   border: 1.5px solid var(--line);
