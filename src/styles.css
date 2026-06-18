@@ -2524,3 +2524,19 @@ textarea:focus {
     max-height: 95vh;
   }
 }
+
+/* ---------- CRM ---------- */
+.cell-sub {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+.diff-pos {
+  color: var(--forest);
+  font-weight: 600;
+}
+
+.diff-neg {
+  color: var(--terracotta-dark);
+  font-weight: 600;
+}
