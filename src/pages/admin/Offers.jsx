@@ -12,6 +12,8 @@ export default function Offers() {
     name: '',
     discountType: 'percent',
     discountValue: '',
+    budget: '',
+    result: '',
     startDate: '',
     endDate: '',
     active: true,
@@ -21,7 +23,7 @@ export default function Offers() {
 
   const openNew = () => {
     setEditing(null);
-    setForm({ name: '', discountType: 'percent', discountValue: '', startDate: '', endDate: '', active: true, productIds: [] });
+    setForm({ name: '', discountType: 'percent', discountValue: '', budget: '', result: '', startDate: '', endDate: '', active: true, productIds: [] });
     setShowForm(true);
   };
 
@@ -31,6 +33,8 @@ export default function Offers() {
       name: o.name || '',
       discountType: o.discountType || 'percent',
       discountValue: o.discountValue || '',
+      budget: o.budget ?? '',
+      result: o.result ?? '',
       startDate: o.startDate || '',
       endDate: o.endDate || '',
       active: o.active ?? true,
@@ -52,7 +56,12 @@ export default function Offers() {
     e.preventDefault();
     setSaving(true);
     try {
-      const data = { ...form, discountValue: Number(form.discountValue) };
+      const data = {
+        ...form,
+        discountValue: Number(form.discountValue),
+        budget: Number(form.budget) || 0,
+        result: Number(form.result) || 0,
+      };
       if (editing) {
         await updateOffer(editing, data);
         toast.success('Oferta actualizada');
@@ -152,6 +161,31 @@ export default function Offers() {
                 </div>
               </div>
 
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Presupuesto (S/)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={form.budget}
+                    onChange={(e) => setForm({ ...form, budget: e.target.value })}
+                    placeholder="0.00"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Resultado (S/)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={form.result}
+                    onChange={(e) => setForm({ ...form, result: e.target.value })}
+                    placeholder="0.00"
+                  />
+                </div>
+              </div>
+
               <div className="form-group">
                 <label>
                   <input
@@ -200,6 +234,7 @@ export default function Offers() {
               <th>Nombre</th>
               <th>Descuento</th>
               <th>Período</th>
+              <th>Presup. / Result.</th>
               <th>Estado</th>
               <th>Productos</th>
               <th>Acciones</th>
@@ -224,6 +259,10 @@ export default function Offers() {
                     {o.startDate || '—'} → {o.endDate || '—'}
                   </td>
                   <td>
+                    S/ {Number(o.budget || 0).toFixed(2)}
+                    <div className="cell-sub">Result: S/ {Number(o.result || 0).toFixed(2)}</div>
+                  </td>
+                  <td>
                     <span className={`badge ${isExpired ? 'badge-danger' : isFuture ? 'badge-warning' : o.active ? 'badge-success' : 'badge-default'}`}>
                       {isExpired ? 'Vencida' : isFuture ? 'Programada' : o.active ? 'Activa' : 'Inactiva'}
                     </span>
@@ -241,7 +280,7 @@ export default function Offers() {
               );
             })}
             {offers.length === 0 && (
-              <tr><td colSpan="6" className="empty-row">Sin ofertas creadas</td></tr>
+              <tr><td colSpan="7" className="empty-row">Sin ofertas creadas</td></tr>
             )}
           </tbody>
         </table>
