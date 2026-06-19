@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import { useCategories } from '../../hooks/useCategories';
+import { CATEGORIES } from '../../data/products';
 import toast from 'react-hot-toast';
+
+const localImg = (name) => {
+  const match = CATEGORIES.find((c) => c.name === name);
+  return match?.img || null;
+};
 
 export default function Categories() {
   const { categories, loading, addCategory, updateCategory, deleteCategory } = useCategories();
@@ -107,7 +113,11 @@ export default function Categories() {
       <div className="categories-grid-admin">
         {categories.map((c) => (
           <div key={c.id} className="category-admin-card">
-            <img src={c.image || '/img/placeholder.jpg'} alt={c.name} />
+            <img
+              src={c.image || localImg(c.name) || '/img/logo.png'}
+              alt={c.name}
+              onError={(e) => { e.target.src = '/img/logo.png'; }}
+            />
             <div className="category-admin-info">
               <h3>{c.name}</h3>
               <div className="category-admin-actions">
