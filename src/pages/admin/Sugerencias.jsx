@@ -10,6 +10,8 @@ const emptyForm = {
   categoria: '',
   texto: '',
   status: 'nueva',
+  history: [],
+  statusNote: '',
 };
 
 const STATUS_BADGE = { nueva: 'badge-info', revisada: 'badge-warning', aplicada: 'badge-success' };
@@ -19,6 +21,7 @@ export default function Sugerencias() {
   const { clientes } = useClientes();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [origStatus, setOrigStatus] = useState(null);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [filterCategoria, setFilterCategoria] = useState('');
@@ -32,18 +35,22 @@ export default function Sugerencias() {
 
   const openNew = () => {
     setEditing(null);
+    setOrigStatus(null);
     setForm(emptyForm);
     setShowForm(true);
   };
 
   const openEdit = (s) => {
     setEditing(s.id);
+    setOrigStatus(s.status || 'nueva');
     setForm({
       clienteId: s.clienteId || '',
       clienteName: s.clienteName || '',
       categoria: s.categoria || '',
       texto: s.texto || '',
       status: s.status || 'nueva',
+      history: s.history || [],
+      statusNote: '',
     });
     setShowForm(true);
   };
@@ -57,11 +64,28 @@ export default function Sugerencias() {
     e.preventDefault();
     setSaving(true);
     try {
+      const base = {
+        clienteId: form.clienteId,
+        clienteName: form.clienteName,
+        categoria: form.categoria,
+        texto: form.texto,
+        status: form.status,
+      };
       if (editing) {
-        await updateSugerencia(editing, form);
+        let history = form.history || [];
+        if (form.status !== origStatus) {
+          history = [
+            ...history,
+            { status: form.status, date: new Date().toISOString(), note: form.statusNote || '' },
+          ];
+        }
+        await updateSugerencia(editing, { ...base, history });
         toast.success('Sugerencia actualizada');
       } else {
-        await addSugerencia(form);
+        const history = [
+          { status: form.status, date: new Date().toISOString(), note: 'Sugerencia creada' },
+        ];
+        await addSugerencia({ ...base, history });
         toast.success('Sugerencia creada');
       }
       setShowForm(false);
@@ -160,17 +184,46 @@ export default function Sugerencias() {
                 />
               </div>
 
-              <div className="form-group">
-                <label>Estado</label>
-                <select
-                  value={form.status}
-                  onChange={(e) => setForm({ ...form, status: e.target.value })}
-                >
-                  {ESTADO_SUGERENCIA.map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Estado</label>
+                  <select
+                    value={form.status}
+                    onChange={(e) => setForm({ ...form, status: e.target.value })}
+                  >
+                    {ESTADO_SUGERENCIA.map((s) => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                </div>
+                {editing && form.status !== origStatus && (
+                  <div className="form-group">
+                    <label>Nota del cambio de estado</label>
+                    <input
+                      type="text"
+                      value={form.statusNote}
+                      onChange={(e) => setForm({ ...form, statusNote: e.target.value })}
+                      maxLength={200}
+                      placeholder="¿Qué cambió? (opcional)"
+                    />
+                  </div>
+                )}
               </div>
+
+              {editing && form.history.length > 0 && (
+                <div className="form-group">
+                  <label>Historial de evolución</label>
+                  <ul className="status-timeline">
+                    {form.history.map((h, i) => (
+                      <li key={i}>
+                        <span className={`badge ${STATUS_BADGE[h.status] || 'badge-default'}`}>{h.status}</span>
+                        <span className="cell-sub">{new Date(h.date).toLocaleString()}</span>
+                        {h.note && <span className="timeline-note"> — {h.note}</span>}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               <div className="form-actions">
                 <button type="button" className="btn btn-outline" onClick={() => setShowForm(false)}>

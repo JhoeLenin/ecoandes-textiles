@@ -26,6 +26,20 @@ const db = getFirestore(app);
 
 const now = () => new Date().toISOString();
 
+// Construye el historial de estados hasta el estado final (para la timeline).
+function buildHistory(order, finalStatus) {
+  const end = order.indexOf(finalStatus);
+  const steps = end >= 0 ? order.slice(0, end + 1) : [finalStatus];
+  return steps.map((status, i) => ({
+    status,
+    date: new Date(Date.now() - (steps.length - i) * 86400000).toISOString(),
+    note: i === 0 ? 'Registrado' : `Pasó a ${status}`,
+  }));
+}
+
+const ORDER_RECLAMO = ['abierto', 'en_proceso', 'resuelto'];
+const ORDER_SUGERENCIA = ['nueva', 'revisada', 'aplicada'];
+
 // Inserta solo si la colección está vacía (idempotente, no duplica producción).
 async function seedIfEmpty(name, label, fn) {
   const snap = await getDocs(collection(db, name));
@@ -148,7 +162,8 @@ async function seed() {
         const cli = clienteRefs[r.clienteIdx];
         const { clienteIdx, ...rest } = r;
         const ref = await addDoc(collection(db, 'reclamos'), {
-          ...rest, clienteId: cli.id, clienteName: cli.name, createdAt: now(),
+          ...rest, clienteId: cli.id, clienteName: cli.name,
+          history: buildHistory(ORDER_RECLAMO, r.status), createdAt: now(),
         });
         console.log(`  ✓ ${r.asunto} — ${cli.name} (${ref.id})`);
       }
@@ -159,7 +174,8 @@ async function seed() {
         const cli = clienteRefs[s.clienteIdx];
         const { clienteIdx, ...rest } = s;
         const ref = await addDoc(collection(db, 'sugerencias'), {
-          ...rest, clienteId: cli.id, clienteName: cli.name, createdAt: now(),
+          ...rest, clienteId: cli.id, clienteName: cli.name,
+          history: buildHistory(ORDER_SUGERENCIA, s.status), createdAt: now(),
         });
         console.log(`  ✓ ${s.categoria} — ${cli.name} (${ref.id})`);
       }

@@ -11,6 +11,8 @@ const emptyForm = {
   detalle: '',
   status: 'abierto',
   respuesta: '',
+  history: [],
+  statusNote: '',
 };
 
 const STATUS_BADGE = { abierto: 'badge-danger', en_proceso: 'badge-warning', resuelto: 'badge-success' };
@@ -20,6 +22,7 @@ export default function Reclamos() {
   const { clientes } = useClientes();
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [origStatus, setOrigStatus] = useState(null);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [filterStatus, setFilterStatus] = useState('');
@@ -28,12 +31,14 @@ export default function Reclamos() {
 
   const openNew = () => {
     setEditing(null);
+    setOrigStatus(null);
     setForm(emptyForm);
     setShowForm(true);
   };
 
   const openEdit = (r) => {
     setEditing(r.id);
+    setOrigStatus(r.status || 'abierto');
     setForm({
       clienteId: r.clienteId || '',
       clienteName: r.clienteName || '',
@@ -41,6 +46,8 @@ export default function Reclamos() {
       detalle: r.detalle || '',
       status: r.status || 'abierto',
       respuesta: r.respuesta || '',
+      history: r.history || [],
+      statusNote: '',
     });
     setShowForm(true);
   };
@@ -54,11 +61,29 @@ export default function Reclamos() {
     e.preventDefault();
     setSaving(true);
     try {
+      const base = {
+        clienteId: form.clienteId,
+        clienteName: form.clienteName,
+        asunto: form.asunto,
+        detalle: form.detalle,
+        status: form.status,
+        respuesta: form.respuesta,
+      };
       if (editing) {
-        await updateReclamo(editing, form);
+        let history = form.history || [];
+        if (form.status !== origStatus) {
+          history = [
+            ...history,
+            { status: form.status, date: new Date().toISOString(), note: form.statusNote || '' },
+          ];
+        }
+        await updateReclamo(editing, { ...base, history });
         toast.success('Reclamo actualizado');
       } else {
-        await addReclamo(form);
+        const history = [
+          { status: form.status, date: new Date().toISOString(), note: 'Reclamo creado' },
+        ];
+        await addReclamo({ ...base, history });
         toast.success('Reclamo creado');
       }
       setShowForm(false);
@@ -161,6 +186,18 @@ export default function Reclamos() {
                     ))}
                   </select>
                 </div>
+                {editing && form.status !== origStatus && (
+                  <div className="form-group">
+                    <label>Nota del cambio de estado</label>
+                    <input
+                      type="text"
+                      value={form.statusNote}
+                      onChange={(e) => setForm({ ...form, statusNote: e.target.value })}
+                      maxLength={200}
+                      placeholder="¿Qué cambió? (opcional)"
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="form-group">
@@ -173,6 +210,21 @@ export default function Reclamos() {
                   placeholder="Respuesta dada al cliente (opcional)"
                 />
               </div>
+
+              {editing && form.history.length > 0 && (
+                <div className="form-group">
+                  <label>Historial de evolución</label>
+                  <ul className="status-timeline">
+                    {form.history.map((h, i) => (
+                      <li key={i}>
+                        <span className={`badge ${STATUS_BADGE[h.status] || 'badge-default'}`}>{h.status}</span>
+                        <span className="cell-sub">{new Date(h.date).toLocaleString()}</span>
+                        {h.note && <span className="timeline-note"> — {h.note}</span>}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               <div className="form-actions">
                 <button type="button" className="btn btn-outline" onClick={() => setShowForm(false)}>

@@ -2482,6 +2482,37 @@ textarea:focus {
   padding: 0.5rem;
 }
 
+.status-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0 0 0.75rem;
+  border-left: 2px solid var(--line);
+}
+
+.status-timeline li {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  position: relative;
+}
+
+.status-timeline li::before {
+  content: '';
+  position: absolute;
+  left: -1.1rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--terracotta);
+}
+
+.timeline-note {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
 /* Responsive Admin */
 @media (max-width: 768px) {
   .admin-sidebar {
