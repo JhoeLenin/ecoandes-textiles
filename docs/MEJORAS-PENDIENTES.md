@@ -1,12 +1,12 @@
 # EcoAndes — Lista de Mejoras Pendientes
 
-## P0 — Críticos (Seguridad / Bugs)
+## P0 — Críticos (Seguridad / Bugs) — ✅ COMPLETADO
 
-| # | Mejora | Archivo | Descripción |
-|---|--------|---------|-------------|
-| 1 | Culqi secret key en frontend | `Checkout.jsx:63` | La `VITE_CULQI_SECRET_KEY` se usa en fetch directo desde el navegador. Cualquiera la ve en DevTools. Mover a Cloud Function o Edge Function. |
-| 2 | Doble sistema de toast | `CartContext.jsx`, `Home.jsx:56`, `Contact.jsx:24` | CartContext tiene su propio toast HTML. El resto usa react-hot-toast. Unificar. Además Home y Contact silencian errores de Firestore con `catch {}`. |
-| 3 | Memory leak createObjectURL | `admin/Products.jsx:261` | `URL.createObjectURL(f)` sin `URL.revokeObjectURL()`. Usar useMemo o useEffect para limpiar. |
+| # | Mejora | Archivo | Estado |
+|---|--------|---------|--------|
+| 1 | Culqi secret key en frontend | `Checkout.jsx` → `api/culqi-charge.js` | ✅ Movido a Vercel Serverless Function. Secret server-side (`CULQI_SECRET_KEY`). |
+| 2 | Doble sistema de toast | `CartContext.jsx`, `Home.jsx`, `Contact.jsx` | ✅ Unificado en react-hot-toast; errores de Firestore ahora se muestran. |
+| 3 | Memory leak createObjectURL | `admin/Products.jsx` | ✅ Previews con useMemo + revoke en useEffect. |
 
 ## P1 — Performance (Bundle 824KB JS)
 
