@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import {
   collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy
 } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from '../firebase';
+import { db } from '../firebase';
+import { uploadToCloudinary } from '../lib/cloudinary';
 
 const COLLECTION = 'categories';
 
@@ -25,9 +25,7 @@ export function useCategories() {
   const addCategory = async (data, imageFile) => {
     let image = '';
     if (imageFile) {
-      const storageRef = ref(storage, `categories/${Date.now()}_${imageFile.name}`);
-      const snap = await uploadBytes(storageRef, imageFile);
-      image = await getDownloadURL(snap.ref);
+      image = await uploadToCloudinary(imageFile, 'categories');
     }
     const docRef = await addDoc(collection(db, COLLECTION), { ...data, image });
     return docRef.id;
@@ -36,9 +34,7 @@ export function useCategories() {
   const updateCategory = async (id, data, imageFile) => {
     const update = { ...data };
     if (imageFile) {
-      const storageRef = ref(storage, `categories/${Date.now()}_${imageFile.name}`);
-      const snap = await uploadBytes(storageRef, imageFile);
-      update.image = await getDownloadURL(snap.ref);
+      update.image = await uploadToCloudinary(imageFile, 'categories');
     }
     await updateDoc(doc(db, COLLECTION, id), update);
   };

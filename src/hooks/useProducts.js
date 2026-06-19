@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import {
   collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot
 } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from '../firebase';
+import { db } from '../firebase';
+import { uploadManyToCloudinary } from '../lib/cloudinary';
 
 const COLLECTION = 'products';
 
@@ -49,12 +49,6 @@ export function useProducts() {
 }
 
 async function uploadImages(files) {
-  const urls = [];
-  for (const file of files) {
-    const storageRef = ref(storage, `products/${Date.now()}_${file.name}`);
-    const snap = await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(snap.ref);
-    urls.push(url);
-  }
-  return urls;
+  if (!files || files.length === 0) return [];
+  return uploadManyToCloudinary(files, 'products');
 }
