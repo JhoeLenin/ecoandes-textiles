@@ -49,7 +49,7 @@ export default function Products() {
   };
 
   const openEdit = (p) => {
-    setEditing(p.id);
+    setEditing(p.docId);
     setForm({
       name: p.name || '',
       category: p.category || '',
@@ -334,7 +334,7 @@ export default function Products() {
             {filtered.map((p) => {
               const cat = categories.find((c) => c.id === p.category);
               return (
-                <tr key={p.id}>
+                <tr key={p.docId}>
                   <td>
                     <img
                       src={p.images?.[0] || productImg(p.id, 1)}
@@ -356,7 +356,7 @@ export default function Products() {
                     <button className="btn-icon" onClick={() => openEdit(p)} title="Editar">
                       <i className="fa-solid fa-pen" />
                     </button>
-                    <button className="btn-icon btn-danger" onClick={() => handleDelete(p.id, p.name)} title="Eliminar">
+                    <button className="btn-icon btn-danger" onClick={() => handleDelete(p.docId, p.name)} title="Eliminar">
                       <i className="fa-solid fa-trash" />
                     </button>
                   </td>

@@ -15,7 +15,9 @@ export function useProducts() {
     const unsub = onSnapshot(
       query(collection(db, COLLECTION), orderBy('createdAt', 'desc')),
       (snap) => {
-        setProducts(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+        // docId = id real del doc Firestore (para escribir).
+        // id = id lógico del campo (PROD-XX, usado por tienda/ofertas); si no existe, cae al docId.
+        setProducts(snap.docs.map((d) => ({ ...d.data(), docId: d.id, id: d.data().id || d.id })));
         setLoading(false);
       }
     );
