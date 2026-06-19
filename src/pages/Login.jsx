@@ -7,11 +7,15 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login, user } = useAuth();
+  const { login, user, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   if (user) {
-    navigate('/admin', { replace: true });
+    if (isAdmin) {
+      navigate('/admin', { replace: true });
+    } else {
+      navigate('/', { replace: true });
+    }
     return null;
   }
 
@@ -60,6 +64,9 @@ export default function Login() {
             {loading ? 'Ingresando...' : 'Iniciar Sesión'}
           </button>
         </form>
+        <p className="login-footer">
+          ¿Eres cliente? <a href="/cuenta">Inicia sesión aquí</a>
+        </p>
       </div>
     </div>
   );

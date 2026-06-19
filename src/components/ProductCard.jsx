@@ -1,7 +1,8 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getCategory, productImg, discountPct, formatPrice } from '../data/products';
 import { useCart } from '../context/CartContext';
+import { useFavorites } from '../hooks/useFavorites';
+import { useAuthGate } from '../hooks/useAuthGate';
 
 // Rating sintético estable por producto (hasta tener reseñas reales)
 function ratingFor(id) {
@@ -26,9 +27,11 @@ export function Stars({ rating }) {
 
 export default function ProductCard({ product: p }) {
   const { addToCart } = useCart();
-  const [liked, setLiked] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const gate = useAuthGate();
   const { rating, reviews } = ratingFor(p.id);
   const lowStock = p.stock <= 10;
+  const liked = isFavorite(p.id);
 
   return (
     <article className="product-card">
@@ -42,7 +45,7 @@ export default function ProductCard({ product: p }) {
       <button
         className={`wishlist-btn ${liked ? 'liked' : ''}`}
         aria-label={liked ? 'Quitar de favoritos' : 'Agregar a favoritos'}
-        onClick={() => setLiked(!liked)}
+        onClick={() => gate(() => toggleFavorite(p.id))}
       >
         <i className={`${liked ? 'fa-solid' : 'fa-regular'} fa-heart`} />
       </button>
@@ -60,7 +63,7 @@ export default function ProductCard({ product: p }) {
           <span className="price-offer">{formatPrice(p.priceOffer)}</span>
           <span className="price-list">{formatPrice(p.priceList)}</span>
         </div>
-        <button className="btn btn-primary btn-add" onClick={() => addToCart(p.id, 1)}>
+        <button className="btn btn-primary btn-add" onClick={() => gate(() => addToCart(p.id, 1))}>
           <i className="fa-solid fa-cart-plus" /> Agregar al carrito
         </button>
       </div>

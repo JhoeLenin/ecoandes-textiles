@@ -3,7 +3,7 @@
 Proyecto: EcoAndes (React + Vite + Firebase). Práctica 02 Negocios Electrónicos — prototipo CRM
 sobre el panel admin existente.
 
-> **ESTADO: tus 4 módulos COMPLETADOS y mergeados a `master`.** ✅
+> **ESTADO: CRM completado + Auth/Favoritos de clientes implementados.** ✅
 
 ---
 
@@ -88,6 +88,26 @@ reclamos abiertos. Reusa los hooks. No rompas las stats de ecommerce ya existent
 
 ## Esquema de datos (referencia)
 Ver `docs/DEV-AMORCITO.md` — mismo esquema compartido.
+
+---
+
+## Auth + Favoritos (nuevo)
+
+| Archivo | Descripción | Estado |
+|---------|-------------|--------|
+| `src/context/AuthContext.jsx` | Login, register, logout, isAdmin, isCustomer | ✅ |
+| `src/pages/Cuenta.jsx` | Página /cuenta con tabs Login + Registro | ✅ |
+| `src/hooks/useAuthGate.jsx` | Gate que pide login antes de acciones | ✅ |
+| `src/hooks/useFavorites.js` | Favoritos persistidos en Firestore por usuario | ✅ |
+| `src/components/ProductCard.jsx` | Usa useAuthGate + useFavorites | ✅ |
+| `src/components/Header.jsx` | Icono cuenta + logout en header | ✅ |
+
+### Flujo de auth
+- `/cuenta` → página con tabs Login / Registro para clientes
+- `/login` → exclusivo para admin (redirige a `/admin`)
+- `useAuthGate` → si no hay sesión, muestra toast con link a `/cuenta`
+- `useFavorites` → almacena `favorites/{uid}.productIds[]` en Firestore
+- `register()` → crea usuario en Firebase Auth + doc en `users/{uid}` con `role: 'cliente'`
 
 ---
 

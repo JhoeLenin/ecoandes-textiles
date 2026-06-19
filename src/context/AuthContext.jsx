@@ -1,11 +1,17 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { auth } from '../firebase';
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signOut,
+} from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase';
 
 const AuthContext = createContext(null);
 
 const ADMIN_EMAIL = 'admin@ecoandes.com';
-const ADMIN_PASSWORD = 'admin123';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -20,11 +26,25 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = (email, password) => signInWithEmailAndPassword(auth, email, password);
+
+  const register = async (name, email, password) => {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    if (name) await updateProfile(cred.user, { displayName: name });
+    await setDoc(doc(db, 'users', cred.user.uid), {
+      name: name || '',
+      email,
+      role: 'cliente',
+      createdAt: new Date().toISOString(),
+    });
+    return cred;
+  };
+
   const logout = () => signOut(auth);
   const isAdmin = user?.email === ADMIN_EMAIL;
+  const isCustomer = !!user && !isAdmin;
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, isAdmin }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, isAdmin, isCustomer }}>
       {children}
     </AuthContext.Provider>
   );

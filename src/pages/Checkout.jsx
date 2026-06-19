@@ -6,6 +6,7 @@ import {
   getProduct, formatPrice, shippingCost, DEPARTAMENTOS,
 } from '../data/products';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 
 const PAYMENT_METHODS = [
@@ -33,6 +34,7 @@ const PAYMENT_METHODS = [
 
 export default function Checkout() {
   const { cart, subtotal, clearCart } = useCart();
+  const { user } = useAuth();
   const [departamento, setDepartamento] = useState('');
   const [confirmed, setConfirmed] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -90,6 +92,7 @@ export default function Checkout() {
       });
 
       await addDoc(collection(db, 'orders'), {
+        userId: user?.uid || null,
         customer: {
           name: form.nombre.value.trim(),
           email: form.email.value.trim(),

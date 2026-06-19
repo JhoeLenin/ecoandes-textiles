@@ -3,7 +3,7 @@
 Proyecto: EcoAndes (React + Vite + Firebase). Práctica 02 Negocios Electrónicos — prototipo CRM
 sobre el panel admin existente.
 
-> **ESTADO: tus 3 módulos COMPLETADOS y mergeados a `master`** (PR #1). ✅
+> **ESTADO: tus 3 módulos COMPLETADOS y mergeados a `master`** (PR #1). Auth + Favoritos de clientes implementados. ✅
 
 ---
 
@@ -105,3 +105,34 @@ Enums centralizados en `src/data/crm.js`.
   Sin datos, los reportes salen en cero.
 - ⬜ **Cuestionario** — 4 preguntas sobre tiendas virtuales.
 - ⬜ **Informe + capturas** — documento final de la práctica.
+
+---
+
+## Auth + Pedidos de clientes (nuevo)
+
+### Rutas públicas nuevas
+| Ruta | Descripción |
+|------|-------------|
+| `/cuenta` | Login + Registro de clientes (tabs) |
+| `/mis-pedidos` | Historial de pedidos del cliente logueado |
+| `/perfil` | Editar nombre y contraseña |
+
+### Archivos nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `src/pages/Cuenta.jsx` | Página auth clientes con tabs Login/Registro + dashboard |
+| `src/pages/MisPedidos.jsx` | Lista de pedidos del cliente con estado |
+| `src/pages/Perfil.jsx` | Editar nombre y contraseña |
+| `src/hooks/useAuthGate.jsx` | Gate que pide login antes de acciones |
+| `src/hooks/useFavorites.js` | Favoritos en Firestore por usuario |
+| `src/hooks/useMyOrders.js` | Pedidos filtrados por email del usuario |
+
+### Flujo de pedidos
+- Checkout crea orden con `userId` (si logueado) + `customer.email`
+- `useMyOrders` filtra por `customer.email` del usuario actual
+- Admin sigue viendo todos los pedidos en `/admin/pedidos`
+
+### Login admin
+- `/login` → exclusivo admin, redirect a `/admin`
+- `/cuenta` → clientes, redirect a `/` al loguearse
+- Header muestra icono de pedidos + cuenta + logout para clientes

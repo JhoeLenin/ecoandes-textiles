@@ -27,6 +27,9 @@ import Reclamos from './pages/admin/Reclamos';
 import Sugerencias from './pages/admin/Sugerencias';
 import ReportesCRM from './pages/admin/ReportesCRM';
 import SeedDb from './pages/admin/SeedDb';
+import Cuenta from './pages/Cuenta';
+import MisPedidos from './pages/MisPedidos';
+import Perfil from './pages/Perfil';
 import { Toaster } from 'react-hot-toast';
 
 function ScrollToTop() {
@@ -68,6 +71,9 @@ export default function App() {
           <ScrollToTop />
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/cuenta" element={<Cuenta />} />
+          <Route path="/mis-pedidos" element={<MisPedidos />} />
+          <Route path="/perfil" element={<Perfil />} />
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Dashboard />} />
               <Route path="productos" element={<Products />} />

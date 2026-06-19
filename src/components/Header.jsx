@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import toast from 'react-hot-toast';
 
 const links = [
   { to: '/', label: 'Inicio' },
@@ -12,7 +14,13 @@ const links = [
 
 export default function Header() {
   const { count } = useCart();
+  const { user, logout, isAdmin } = useAuth();
   const [open, setOpen] = useState(false);
+
+  const handleLogout = async () => {
+    await logout();
+    toast.success('Sesión cerrada');
+  };
 
   return (
     <header className="site-header">
@@ -39,6 +47,26 @@ export default function Header() {
         </nav>
 
         <div className="header-actions">
+          {user && !isAdmin && (
+            <Link to="/mis-pedidos" className="header-account" aria-label="Mis pedidos">
+              <i className="fa-solid fa-box" />
+            </Link>
+          )}
+          {user && !isAdmin && (
+            <Link to="/cuenta" className="header-account" aria-label="Mi cuenta">
+              <i className="fa-solid fa-user" />
+            </Link>
+          )}
+          {!user && (
+            <Link to="/cuenta" className="header-account" aria-label="Iniciar sesión">
+              <i className="fa-regular fa-user" />
+            </Link>
+          )}
+          {user && (
+            <button className="header-logout" onClick={handleLogout} aria-label="Cerrar sesión">
+              <i className="fa-solid fa-right-from-bracket" />
+            </button>
+          )}
           <Link to="/carrito" className="cart-link" aria-label="Carrito">
             <i className="fa-solid fa-cart-shopping" />
             {count > 0 && <span className="cart-badge">{count}</span>}
