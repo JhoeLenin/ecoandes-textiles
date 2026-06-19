@@ -2,9 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
-import {
-  getProduct, formatPrice, shippingCost, DEPARTAMENTOS,
-} from '../data/products';
+import { useCatalog, formatPrice, shippingCost } from '../context/CatalogContext';
+import { DEPARTAMENTOS } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import useCulqi from '../hooks/useCulqi';
@@ -35,6 +34,7 @@ const PAYMENT_METHODS = [
 
 export default function Checkout() {
   const { cart, subtotal, clearCart } = useCart();
+  const { getProduct } = useCatalog();
   const { user } = useAuth();
   const [departamento, setDepartamento] = useState('');
   const [confirmed, setConfirmed] = useState(null);

@@ -3644,3 +3644,139 @@ textarea:focus {
     grid-template-columns: 1fr;
   }
 }
+
+/* ===== Reportes CRM: gráficos de barras ===== */
+.chart-title {
+  margin: 1rem 0 0.5rem;
+  font-size: 0.95rem;
+  color: var(--text-muted, #555);
+  font-weight: 600;
+}
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 130px 1fr 70px;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.bar-label {
+  font-size: 0.8rem;
+  color: var(--text, #333);
+  text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bar-track {
+  position: relative;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+  height: 18px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  min-width: 2px;
+  transition: width 0.4s ease;
+}
+
+.bar-value {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.bar-group {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.bar-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.bar-inline-value {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text, #333);
+}
+
+.bar-legend {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--text-muted, #555);
+}
+
+.bar-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.bar-legend i {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.report-print-date {
+  font-size: 0.8rem;
+  color: var(--text-muted, #777);
+  margin: -0.5rem 0 1rem;
+}
+
+@media (max-width: 640px) {
+  .bar-row, .bar-group {
+    grid-template-columns: 90px 1fr;
+  }
+  .bar-value { display: none; }
+}
+
+/* ===== Impresión de reportes ===== */
+@media print {
+  .admin-sidebar,
+  .admin-menu-toggle,
+  .admin-sidebar-backdrop,
+  .no-print {
+    display: none !important;
+  }
+  .admin-layout,
+  .admin-content {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .admin-section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .bar-fill {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body {
+    background: #fff !important;
+  }
+}

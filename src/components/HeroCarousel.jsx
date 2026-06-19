@@ -14,14 +14,14 @@ const SLIDES = [
     eyebrow: 'Colección Alpaca',
     title: 'Abrígate con fibra de los Andes',
     text: 'Chompas, bufandas y chullos tejidos con alpaca suave y cálida. Tallas para toda la familia.',
-    cta: { to: '/tienda?cat=CAT-01', label: 'Chompas y Bufandas' },
+    cta: { to: '/tienda?cat=CAT-01', label: 'Ver Ropa' },
   },
   {
     img: '/img/cat-02.jpg',
     eyebrow: 'Hogar Andino',
     title: 'Tu casa con alma artesanal',
     text: 'Mantas, cojines y alfombras con patrones tradicionales que transforman cualquier espacio.',
-    cta: { to: '/tienda?cat=CAT-02', label: 'Ver Accesorios' },
+    cta: { to: '/tienda?cat=CAT-04', label: 'Ver Hogar' },
   },
 ];
 

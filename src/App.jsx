@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { CartProvider } from './context/CartContext';
+import { CatalogProvider } from './context/CatalogContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -67,32 +68,34 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <CartProvider>
-          <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
-          <ScrollToTop />
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/cuenta" element={<Cuenta />} />
-          <Route path="/mis-pedidos" element={<MisPedidos />} />
-          <Route path="/perfil" element={<Perfil />} />
-          <Route path="/favoritos" element={<Favoritos />} />
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="productos" element={<Products />} />
-              <Route path="categorias" element={<Categories />} />
-              <Route path="ofertas" element={<Offers />} />
-              <Route path="pedidos" element={<Orders />} />
-              <Route path="usuarios" element={<Users />} />
-              <Route path="clientes" element={<Clientes />} />
-              <Route path="campanas" element={<Campanas />} />
-              <Route path="reclamos" element={<Reclamos />} />
-              <Route path="sugerencias" element={<Sugerencias />} />
-              <Route path="reportes" element={<ReportesCRM />} />
-            <Route path="seed" element={<SeedDb />} />
-            </Route>
-            <Route path="/*" element={<PublicLayout />} />
-          </Routes>
-        </CartProvider>
+        <CatalogProvider>
+          <CartProvider>
+            <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
+            <ScrollToTop />
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/cuenta" element={<Cuenta />} />
+            <Route path="/mis-pedidos" element={<MisPedidos />} />
+            <Route path="/perfil" element={<Perfil />} />
+            <Route path="/favoritos" element={<Favoritos />} />
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<Dashboard />} />
+                <Route path="productos" element={<Products />} />
+                <Route path="categorias" element={<Categories />} />
+                <Route path="ofertas" element={<Offers />} />
+                <Route path="pedidos" element={<Orders />} />
+                <Route path="usuarios" element={<Users />} />
+                <Route path="clientes" element={<Clientes />} />
+                <Route path="campanas" element={<Campanas />} />
+                <Route path="reclamos" element={<Reclamos />} />
+                <Route path="sugerencias" element={<Sugerencias />} />
+                <Route path="reportes" element={<ReportesCRM />} />
+              <Route path="seed" element={<SeedDb />} />
+              </Route>
+              <Route path="/*" element={<PublicLayout />} />
+            </Routes>
+          </CartProvider>
+        </CatalogProvider>
       </AuthProvider>
     </BrowserRouter>
   );

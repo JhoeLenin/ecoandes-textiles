@@ -8,7 +8,7 @@ import { useClientes } from '../../hooks/useClientes';
 import { useCampanas } from '../../hooks/useCampanas';
 import { useReclamos } from '../../hooks/useReclamos';
 import { useSugerencias } from '../../hooks/useSugerencias';
-import { formatPrice } from '../../data/products';
+import { formatPrice } from '../../context/CatalogContext';
 
 function getGreeting() {
   const h = new Date().getHours();

@@ -4,7 +4,7 @@ import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import HeroCarousel from '../components/HeroCarousel';
 import ProductCard, { Stars } from '../components/ProductCard';
-import { CATEGORIES, PRODUCTS } from '../data/products';
+import { useCatalog } from '../context/CatalogContext';
 import { useCart } from '../context/CartContext';
 import toast from 'react-hot-toast';
 
@@ -40,6 +40,7 @@ const TESTIMONIALS = [
 ];
 
 export default function Home() {
+  const { products: PRODUCTS, categories: CATEGORIES, loading } = useCatalog();
   const featured = PRODUCTS.filter((p) => p.featured).slice(0, 6);
   const { showToast } = useCart();
   const [email, setEmail] = useState('');
@@ -91,7 +92,7 @@ export default function Home() {
           <div className="categories-grid">
             {CATEGORIES.map((c) => (
               <Link key={c.id} to={`/tienda?cat=${c.id}`} className="category-card">
-                <img src={c.img} alt={c.name} />
+                <img src={c.image || c.img || '/img/logo.png'} alt={c.name} />
                 <div className="cat-overlay">
                   <h3>{c.name}</h3>
                   <span className="cat-cta">

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useOrders } from '../../hooks/useOrders';
-import { formatPrice } from '../../data/products';
+import { formatPrice } from '../../context/CatalogContext';
 import toast from 'react-hot-toast';
 
 const STATUS_OPTIONS = ['pendiente', 'procesando', 'enviado', 'entregado', 'cancelado'];

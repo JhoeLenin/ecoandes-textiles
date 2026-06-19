@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getCategory, productImg, discountPct, formatPrice } from '../data/products';
+import { useCatalog, productImg, discountPct, formatPrice } from '../context/CatalogContext';
 import { useCart } from '../context/CartContext';
 import { useFavorites } from '../hooks/useFavorites';
 import { useAuthGate } from '../hooks/useAuthGate';
@@ -28,12 +28,14 @@ export function Stars({ rating }) {
 
 export default function ProductCard({ product: p }) {
   const { addToCart } = useCart();
+  const { getCategory } = useCatalog();
   const { isFavorite, toggleFavorite } = useFavorites();
   const gate = useAuthGate();
   const { rating, reviews } = ratingFor(p.id);
   const lowStock = p.stock > 0 && p.stock < 10;
   const liked = isFavorite(p.id);
   const [justAdded, setJustAdded] = useState(false);
+  const cat = getCategory(p.category);
 
   const handleAdd = () => {
     gate(() => {
@@ -48,10 +50,10 @@ export default function ProductCard({ product: p }) {
       <Link to={`/producto/${p.id}`} className="card-img-link">
         {discountPct(p) > 0 && <span className="badge-discount">-{discountPct(p)}%</span>}
         {lowStock && <span className="badge-stock">¡Pocas unidades!</span>}
-        <img className="img-front" src={productImg(p.id, 1)} alt={p.name} loading="lazy" />
+        <img className="img-front" src={productImg(p, 1)} alt={p.name} loading="lazy" />
         <img
           className="img-back"
-          src={productImg(p.id, 2)}
+          src={productImg(p, 2)}
           alt=""
           loading="lazy"
           aria-hidden="true"
@@ -68,7 +70,7 @@ export default function ProductCard({ product: p }) {
       </button>
 
       <div className="card-body">
-        <span className="card-category">{getCategory(p.category).name}</span>
+        <span className="card-category">{cat?.name || 'Sin categoría'}</span>
         <h3>
           <Link to={`/producto/${p.id}`}>{p.name}</Link>
         </h3>

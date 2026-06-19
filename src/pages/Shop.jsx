@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
-import { CATEGORIES, PRODUCTS } from '../data/products';
+import { useCatalog } from '../context/CatalogContext';
 
 export default function Shop() {
+  const { products: PRODUCTS, categories: CATEGORIES, loading } = useCatalog();
   const [params, setParams] = useSearchParams();
   const category = params.get('cat') || '';
   const [sort, setSort] = useState('default');
@@ -50,6 +51,8 @@ export default function Shop() {
     { value: 'mujer', label: 'Mujeres' },
     { value: 'varon', label: 'Varones' },
   ];
+
+  if (loading) return <div className="admin-loading">Cargando productos...</div>;
 
   return (
     <>

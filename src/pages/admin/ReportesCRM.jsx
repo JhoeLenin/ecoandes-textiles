@@ -23,6 +23,54 @@ function DeviationBadge({ budget, result }) {
   );
 }
 
+// Barra horizontal simple. data: [{ label, value }]
+function BarChart({ data, color = 'var(--terracotta)', money = false }) {
+  const max = Math.max(1, ...data.map((d) => d.value));
+  if (!data.some((d) => d.value > 0)) return <p className="empty-msg">Sin datos para graficar</p>;
+  return (
+    <div className="bar-chart">
+      {data.map((d) => (
+        <div className="bar-row" key={d.label}>
+          <span className="bar-label">{d.label}</span>
+          <div className="bar-track">
+            <div className="bar-fill" style={{ width: `${(d.value / max) * 100}%`, background: color }} />
+          </div>
+          <span className="bar-value">{money ? `S/ ${d.value.toFixed(2)}` : d.value}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Barras agrupadas presupuesto vs resultado. data: [{ label, budget, result }]
+function BudgetResultChart({ data }) {
+  const max = Math.max(1, ...data.flatMap((d) => [d.budget || 0, d.result || 0]));
+  if (data.length === 0) return <p className="empty-msg">Sin datos para graficar</p>;
+  return (
+    <div className="bar-chart">
+      {data.map((d) => (
+        <div className="bar-group" key={d.label}>
+          <span className="bar-label">{d.label}</span>
+          <div className="bar-pair">
+            <div className="bar-track">
+              <div className="bar-fill" style={{ width: `${((d.budget || 0) / max) * 100}%`, background: 'var(--sage)' }} />
+              <span className="bar-inline-value">S/ {(d.budget || 0).toFixed(0)}</span>
+            </div>
+            <div className="bar-track">
+              <div className="bar-fill" style={{ width: `${((d.result || 0) / max) * 100}%`, background: 'var(--forest)' }} />
+              <span className="bar-inline-value">S/ {(d.result || 0).toFixed(0)}</span>
+            </div>
+          </div>
+        </div>
+      ))}
+      <div className="bar-legend">
+        <span><i style={{ background: 'var(--sage)' }} /> Presupuesto</span>
+        <span><i style={{ background: 'var(--forest)' }} /> Resultado</span>
+      </div>
+    </div>
+  );
+}
+
 export default function ReportesCRM() {
   const { clientes } = useClientes();
   const { campanas } = useCampanas();
@@ -49,11 +97,23 @@ export default function ReportesCRM() {
   // 5. Reclamos por estado
   const recPorEstado = groupCount(reclamos, 'status');
 
+  // Datos para gráficos
+  const sectorBars = SECTORES.map((s) => ({ label: s, value: porSector[s] || 0 }));
+  const tiendaBars = TIENDAS.map((t) => ({ label: t, value: porTienda[t] || 0 }));
+  const campBars = campanas.map((c) => ({ label: c.name, budget: c.budget || 0, result: c.result || 0 }));
+  const offBars = offers.map((o) => ({ label: o.name, budget: o.budget || 0, result: o.result || 0 }));
+  const sugCatBars = Object.entries(sugPorCategoria).map(([label, value]) => ({ label, value }));
+  const recBars = Object.entries(recPorEstado).map(([label, value]) => ({ label, value }));
+
   return (
-    <div className="admin-page">
+    <div className="admin-page report-page">
       <div className="admin-header">
         <h1 className="admin-title">Reportes CRM</h1>
+        <button className="btn btn-outline no-print" onClick={() => window.print()}>
+          <i className="fa-solid fa-print" /> Exportar / Imprimir
+        </button>
       </div>
+      <p className="report-print-date">Generado: {new Date().toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
 
       {/* Reporte 1 */}
       <div className="admin-section">
@@ -103,6 +163,16 @@ export default function ReportesCRM() {
             </table>
           </div>
         </div>
+        <div className="form-row" style={{ alignItems: 'flex-start' }}>
+          <div style={{ flex: 1 }}>
+            <h4 className="chart-title">Clientes por sector</h4>
+            <BarChart data={sectorBars} color="var(--terracotta)" />
+          </div>
+          <div style={{ flex: 1 }}>
+            <h4 className="chart-title">Clientes por tienda</h4>
+            <BarChart data={tiendaBars} color="var(--forest)" />
+          </div>
+        </div>
       </div>
 
       {/* Reporte 2 */}
@@ -126,6 +196,8 @@ export default function ReportesCRM() {
             </div>
           </div>
         </div>
+        <h4 className="chart-title">Presupuesto vs resultado por campaña</h4>
+        <BudgetResultChart data={campBars} />
         <div className="table-wrap">
           <table className="admin-table">
             <thead><tr><th>Campaña</th><th>Sector</th><th>Presupuesto</th><th>Resultado</th><th>Desviación</th></tr></thead>
@@ -168,6 +240,8 @@ export default function ReportesCRM() {
             </div>
           </div>
         </div>
+        <h4 className="chart-title">Presupuesto vs resultado por promoción</h4>
+        <BudgetResultChart data={offBars} />
         <div className="table-wrap">
           <table className="admin-table">
             <thead><tr><th>Promoción</th><th>Presupuesto</th><th>Resultado</th><th>Desviación</th></tr></thead>
@@ -219,6 +293,8 @@ export default function ReportesCRM() {
             </table>
           </div>
         </div>
+        <h4 className="chart-title">Sugerencias por categoría</h4>
+        <BarChart data={sugCatBars} color="var(--gold)" />
       </div>
 
       {/* Reporte 5 */}
@@ -241,6 +317,8 @@ export default function ReportesCRM() {
             </tbody>
           </table>
         </div>
+        <h4 className="chart-title">Reclamos por estado</h4>
+        <BarChart data={recBars} color="var(--clay)" />
       </div>
     </div>
   );

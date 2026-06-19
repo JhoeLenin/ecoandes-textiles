@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
-import { getProduct, productImg, formatPrice, shippingCost } from '../data/products';
+import { useCatalog, productImg, formatPrice, shippingCost } from '../context/CatalogContext';
 import { useCart } from '../context/CartContext';
 
 export default function Cart() {
   const { cart, setQty, removeFromCart, subtotal } = useCart();
+  const { getProduct } = useCatalog();
   const shipping = shippingCost(subtotal);
   const free = shipping === 0 && subtotal > 0;
 
@@ -35,7 +36,7 @@ export default function Cart() {
               return (
                 <div className="cart-row" key={i.id}>
                   <Link to={`/producto/${p.id}`}>
-                    <img src={productImg(p.id, 1)} alt={p.name} />
+                    <img src={productImg(p, 1)} alt={p.name} />
                   </Link>
                   <div className="cart-row-info">
                     <Link to={`/producto/${p.id}`}><strong>{p.name}</strong></Link>

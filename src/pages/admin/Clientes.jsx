@@ -6,8 +6,8 @@ import toast from 'react-hot-toast';
 const EMPTY = {
   name: '',
   type: 'prospecto',
-  sector: 'comercial',
-  tienda: 'Cayma',
+  sector: 'Público general',
+  tienda: 'Cercado',
   contactName: '',
   genero: 'otro',
   email: '',

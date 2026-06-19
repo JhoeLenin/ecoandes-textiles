@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 const EMPTY = {
   name: '',
   channel: 'email',
-  targetSectors: ['comercial'],
+  targetSectors: ['Público general'],
   budget: '',
   result: '',
   startDate: '',

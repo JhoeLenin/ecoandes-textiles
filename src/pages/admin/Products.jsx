@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useProducts } from '../../hooks/useProducts';
 import { useCategories } from '../../hooks/useCategories';
 import { GENERO_PRODUCTO } from '../../data/crm';
-import { productImg } from '../../data/products';
+import { productImg } from '../../context/CatalogContext';
 import toast from 'react-hot-toast';
 
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -337,7 +337,7 @@ export default function Products() {
                 <tr key={p.docId}>
                   <td>
                     <img
-                      src={p.images?.[0] || productImg(p.id, 1)}
+                      src={p.images?.[0] || productImg(p, 1)}
                       alt={p.name}
                       className="table-img"
                       onError={(e) => { e.target.src = '/img/logo.png'; }}

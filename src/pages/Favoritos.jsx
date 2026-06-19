@@ -1,10 +1,11 @@
 import ProductCard from '../components/ProductCard';
 import { Link } from 'react-router-dom';
 import { useFavorites } from '../hooks/useFavorites';
-import { getProduct } from '../data/products';
+import { useCatalog } from '../context/CatalogContext';
 
 export default function Favoritos() {
   const { favorites } = useFavorites();
+  const { getProduct } = useCatalog();
 
   const products = favorites.map((id) => getProduct(id)).filter(Boolean);
 

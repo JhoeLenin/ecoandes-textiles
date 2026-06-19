@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ProductCard, { Stars } from '../components/ProductCard';
-import {
-  PRODUCTS, getProduct, getCategory, productImg, discountPct, formatPrice,
-} from '../data/products';
+import { useCatalog, productImg, discountPct, formatPrice } from '../context/CatalogContext';
 import { useCart } from '../context/CartContext';
 
 export default function Product() {
   const { id } = useParams();
+  const { getProduct, getCategory, products: PRODUCTS, loading } = useCatalog();
   const product = getProduct(id);
   const { addToCart } = useCart();
   const [qty, setQty] = useState(1);
@@ -18,6 +17,8 @@ export default function Product() {
     setMainImg(1);
     window.scrollTo(0, 0);
   }, [id]);
+
+  if (loading) return <div className="admin-loading">Cargando producto...</div>;
 
   if (!product) {
     return (
@@ -52,13 +53,13 @@ export default function Product() {
         <div className="container product-detail">
           <div className="product-gallery">
             <div className="gallery-main">
-              <img src={productImg(id, mainImg)} alt={product.name} />
+              <img src={productImg(product, mainImg)} alt={product.name} />
             </div>
             <div className="gallery-thumbs">
               {[1, 2].map((n) => (
                 <img
                   key={n}
-                  src={productImg(id, n)}
+                  src={productImg(product, n)}
                   alt={`${product.name} foto ${n}`}
                   className={mainImg === n ? 'active' : ''}
                   onClick={() => setMainImg(n)}

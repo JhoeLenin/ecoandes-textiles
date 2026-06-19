@@ -16,9 +16,10 @@ export const TIPOS_CLIENTE = [
   'regular',
 ];
 
-export const SECTORES = ['industrial', 'comercial', 'servicios', 'minero', 'hogar'];
+export const SECTORES = ['Moda', 'Hoteles y turismo', 'Empresas', 'Público general'];
 
-export const TIENDAS = ['Cayma', 'Cerro Colorado', 'Cercado', 'Paucarpata', 'Hunter'];
+// 5 distritos estratégicos (comerciales/turísticos) de Arequipa.
+export const TIENDAS = ['Cercado', 'Cayma', 'Yanahuara', 'Cerro Colorado', 'José Luis Bustamante y Rivero'];
 
 export const CANALES = ['email', 'telefono', 'visita', 'tienda', 'virtual'];
 

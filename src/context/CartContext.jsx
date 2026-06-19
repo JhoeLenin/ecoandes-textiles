@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
-import { getProduct } from '../data/products';
+import { useCatalog } from './CatalogContext';
 
 const CART_KEY = 'ecoandes_cart';
 const CartContext = createContext(null);
@@ -15,12 +15,12 @@ function loadCart() {
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState(loadCart);
+  const { getProduct } = useCatalog();
 
   useEffect(() => {
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
   }, [cart]);
 
-  // Compat: el resto del código usa showToast; ahora delega en react-hot-toast.
   const showToast = useCallback((msg) => toast(msg), []);
 
   const addToCart = useCallback((id, qty = 1) => {
@@ -39,7 +39,7 @@ export function CartProvider({ children }) {
         ? prev.map((i) => (i.id === id ? { ...i, qty: newQty } : i))
         : [...prev, { id, qty: newQty }];
     });
-  }, []);
+  }, [getProduct]);
 
   const removeFromCart = useCallback((id) => {
     setCart((prev) => prev.filter((i) => i.id !== id));
@@ -53,7 +53,7 @@ export function CartProvider({ children }) {
         i.id === id ? { ...i, qty: Math.max(1, Math.min(qty, product.stock)) } : i
       )
     );
-  }, []);
+  }, [getProduct]);
 
   const clearCart = useCallback(() => setCart([]), []);
 
