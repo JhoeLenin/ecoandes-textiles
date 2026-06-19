@@ -60,32 +60,23 @@ export default function Checkout() {
         return;
       }
 
-      const secretKey = import.meta.env.VITE_CULQI_SECRET_KEY;
-      if (!secretKey || secretKey.includes('tu_llave')) {
-        toast.error('Llave secreta de Culqi no configurada');
-        setSaving(false);
-        return;
-      }
-
-      const chargeResponse = await fetch('https://api.culqi.com/v2/charges', {
+      // El cargo se procesa en el backend (api/culqi-charge) para no exponer
+      // la secret key en el navegador. Aquí solo enviamos el token público.
+      const chargeResponse = await fetch('/api/culqi-charge', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${secretKey}`,
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          amount: Math.round(total * 100),
-          currency_code: 'PEN',
+          token_id: token.id,
+          amount: total,
           email: form.email.value.trim(),
           description: `Pedido EcoAndes - ${form.nombre.value.trim()}`,
-          source: { token_id: token.id },
         }),
       });
 
       const chargeData = await chargeResponse.json();
 
-      if (chargeData.object !== 'charge') {
-        toast.error('Pago rechazado: ' + (chargeData.user_message || 'Error desconocido'));
+      if (!chargeResponse.ok || !chargeData.ok) {
+        toast.error('Pago rechazado: ' + (chargeData.error || 'Error desconocido'));
         setSaving(false);
         return;
       }
@@ -112,7 +103,7 @@ export default function Checkout() {
         },
         items,
         paymentMethod: 'culqi',
-        culqiChargeId: chargeData.id,
+        culqiChargeId: chargeData.chargeId,
         subtotal,
         shipping,
         total,
