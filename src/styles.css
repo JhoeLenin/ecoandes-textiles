@@ -2473,6 +2473,15 @@ textarea:focus {
   width: auto;
 }
 
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.25rem;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem;
+}
+
 /* Responsive Admin */
 @media (max-width: 768px) {
   .admin-sidebar {

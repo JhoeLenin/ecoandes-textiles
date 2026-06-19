@@ -6,13 +6,17 @@ import toast from 'react-hot-toast';
 const EMPTY = {
   name: '',
   channel: 'email',
-  targetSector: 'comercial',
+  targetSectors: ['comercial'],
   budget: '',
   result: '',
   startDate: '',
   endDate: '',
   status: 'activa',
 };
+
+// Compat: campañas viejas guardaban targetSector (string).
+const readSectors = (c) =>
+  c.targetSectors || (c.targetSector ? [c.targetSector] : []);
 
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const money = (n) => `S/ ${Number(n || 0).toFixed(2)}`;
@@ -34,18 +38,36 @@ export default function Campanas() {
 
   const openEdit = (c) => {
     setEditing(c.id);
-    setForm({ ...EMPTY, ...c, budget: c.budget ?? '', result: c.result ?? '' });
+    setForm({
+      ...EMPTY,
+      ...c,
+      targetSectors: readSectors(c),
+      budget: c.budget ?? '',
+      result: c.result ?? '',
+    });
     setShowForm(true);
   };
 
+  const toggleSector = (s) =>
+    setForm((f) => ({
+      ...f,
+      targetSectors: f.targetSectors.includes(s)
+        ? f.targetSectors.filter((x) => x !== s)
+        : [...f.targetSectors, s],
+    }));
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (form.targetSectors.length === 0) {
+      toast.error('Selecciona al menos un sector objetivo');
+      return;
+    }
     setSaving(true);
     try {
       const data = {
         name: form.name,
         channel: form.channel,
-        targetSector: form.targetSector,
+        targetSectors: form.targetSectors,
         budget: Number(form.budget) || 0,
         result: Number(form.result) || 0,
         startDate: form.startDate,
@@ -108,22 +130,27 @@ export default function Campanas() {
                   maxLength={100}
                 />
               </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Canal *</label>
-                  <select value={form.channel} onChange={(e) => setField('channel', e.target.value)}>
-                    {CANALES.map((c) => (
-                      <option key={c} value={c}>{cap(c)}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Sector objetivo *</label>
-                  <select value={form.targetSector} onChange={(e) => setField('targetSector', e.target.value)}>
-                    {SECTORES.map((s) => (
-                      <option key={s} value={s}>{cap(s)}</option>
-                    ))}
-                  </select>
+              <div className="form-group">
+                <label>Canal *</label>
+                <select value={form.channel} onChange={(e) => setField('channel', e.target.value)}>
+                  {CANALES.map((c) => (
+                    <option key={c} value={c}>{cap(c)}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Sectores objetivo * (uno o varios)</label>
+                <div className="checkbox-grid">
+                  {SECTORES.map((s) => (
+                    <label key={s} className="checkbox-item">
+                      <input
+                        type="checkbox"
+                        checked={form.targetSectors.includes(s)}
+                        onChange={() => toggleSector(s)}
+                      />
+                      {cap(s)}
+                    </label>
+                  ))}
                 </div>
               </div>
               <div className="form-row">
@@ -212,7 +239,7 @@ export default function Campanas() {
                 <tr key={c.id}>
                   <td>{c.name}</td>
                   <td>{cap(c.channel || '')}</td>
-                  <td>{cap(c.targetSector || '')}</td>
+                  <td>{readSectors(c).map(cap).join(', ') || '—'}</td>
                   <td>
                     {c.startDate || '—'}
                     {c.endDate && <div className="cell-sub">a {c.endDate}</div>}

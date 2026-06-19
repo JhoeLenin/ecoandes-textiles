@@ -77,10 +77,10 @@ const CLIENTES = [
 ];
 
 const CAMPANAS = [
-  { name: 'Campaña Invierno B2B',   channel: 'email',    targetSector: 'minero',    budget: 1500, result: 1820, startDate: '2026-06-01', endDate: '2026-06-30', status: 'activa' },
-  { name: 'Feria Regional Arequipa', channel: 'visita',  targetSector: 'comercial', budget: 3000, result: 2400, startDate: '2026-04-10', endDate: '2026-04-20', status: 'finalizada' },
-  { name: 'Promo Día de la Madre',  channel: 'virtual',  targetSector: 'hogar',     budget: 800,  result: 1100, startDate: '2026-05-01', endDate: '2026-05-12', status: 'finalizada' },
-  { name: 'Captación Hoteles',      channel: 'telefono', targetSector: 'servicios', budget: 1200, result: 0,    startDate: '2026-06-10', endDate: '2026-07-10', status: 'activa' },
+  { name: 'Campaña Invierno B2B',   channel: 'email',    targetSectors: ['minero', 'industrial'], budget: 1500, result: 1820, startDate: '2026-06-01', endDate: '2026-06-30', status: 'activa' },
+  { name: 'Feria Regional Arequipa', channel: 'visita',  targetSectors: ['comercial', 'hogar'],    budget: 3000, result: 2400, startDate: '2026-04-10', endDate: '2026-04-20', status: 'finalizada' },
+  { name: 'Promo Día de la Madre',  channel: 'virtual',  targetSectors: ['hogar'],                 budget: 800,  result: 1100, startDate: '2026-05-01', endDate: '2026-05-12', status: 'finalizada' },
+  { name: 'Captación Hoteles',      channel: 'telefono', targetSectors: ['servicios'],             budget: 1200, result: 0,    startDate: '2026-06-10', endDate: '2026-07-10', status: 'activa' },
 ];
 
 // clienteIdx referencia el índice en CLIENTES (se resuelve al id real tras crearlos).

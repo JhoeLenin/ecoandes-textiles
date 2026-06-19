@@ -133,7 +133,7 @@ export default function ReportesCRM() {
               {campanas.map((c) => (
                 <tr key={c.id}>
                   <td>{c.name}</td>
-                  <td>{c.targetSector || '—'}</td>
+                  <td>{(c.targetSectors || (c.targetSector ? [c.targetSector] : [])).join(', ') || '—'}</td>
                   <td>S/ {(c.budget || 0).toFixed(2)}</td>
                   <td>S/ {(c.result || 0).toFixed(2)}</td>
                   <td><DeviationBadge budget={c.budget} result={c.result} /></td>
