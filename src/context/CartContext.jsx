@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import toast from 'react-hot-toast';
 import { getProduct } from '../data/products';
 
 const CART_KEY = 'ecoandes_cart';
@@ -14,21 +15,13 @@ function loadCart() {
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState(loadCart);
-  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
   }, [cart]);
 
-  const showToast = useCallback((msg) => {
-    setToast(msg);
-  }, []);
-
-  useEffect(() => {
-    if (!toast) return;
-    const t = setTimeout(() => setToast(null), 2200);
-    return () => clearTimeout(t);
-  }, [toast]);
+  // Compat: el resto del código usa showToast; ahora delega en react-hot-toast.
+  const showToast = useCallback((msg) => toast(msg), []);
 
   const addToCart = useCallback((id, qty = 1) => {
     const product = getProduct(id);
@@ -38,10 +31,10 @@ export function CartProvider({ children }) {
       const current = item ? item.qty : 0;
       const newQty = Math.min(current + qty, product.stock);
       if (newQty === current) {
-        setToast(`Stock máximo alcanzado (${product.stock} unidades)`);
+        toast.error(`Stock máximo alcanzado (${product.stock} unidades)`);
         return prev;
       }
-      setToast(`${product.name} agregado al carrito`);
+      toast.success(`${product.name} agregado al carrito`);
       return item
         ? prev.map((i) => (i.id === id ? { ...i, qty: newQty } : i))
         : [...prev, { id, qty: newQty }];
@@ -72,10 +65,9 @@ export function CartProvider({ children }) {
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, setQty, clearCart, count, subtotal, toast, showToast }}
+      value={{ cart, addToCart, removeFromCart, setQty, clearCart, count, subtotal, showToast }}
     >
       {children}
-      {toast && <div className="toast show">{toast}</div>}
     </CartContext.Provider>
   );
 }

@@ -6,6 +6,7 @@ import HeroCarousel from '../components/HeroCarousel';
 import ProductCard, { Stars } from '../components/ProductCard';
 import { CATEGORIES, PRODUCTS } from '../data/products';
 import { useCart } from '../context/CartContext';
+import toast from 'react-hot-toast';
 
 const BENEFITS = [
   { icon: 'fa-hand-holding-heart', title: 'Hecho a mano', text: 'Cada pieza es única, tejida por artesanos arequipeños' },
@@ -53,12 +54,13 @@ export default function Home() {
         email,
         createdAt: new Date().toISOString(),
       });
+      setEmail('');
+      showToast('¡Gracias por suscribirte! Recibirás nuestras novedades.');
     } catch {
-      // silent
+      toast.error('No se pudo completar la suscripción. Intenta de nuevo.');
+    } finally {
+      setSending(false);
     }
-    setEmail('');
-    setSending(false);
-    showToast('¡Gracias por suscribirte! Recibirás nuestras novedades.');
   };
 
   return (

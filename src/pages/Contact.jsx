@@ -21,13 +21,14 @@ export default function Contact() {
         message: form.mensaje.value.trim(),
         createdAt: new Date().toISOString(),
       });
+      form.reset();
+      setMsgLen(0);
+      toast.success('¡Mensaje enviado! Te responderemos pronto.');
     } catch {
-      // silent
+      toast.error('No se pudo enviar el mensaje. Intenta de nuevo.');
+    } finally {
+      setSending(false);
     }
-    form.reset();
-    setMsgLen(0);
-    setSending(false);
-    toast.success('¡Mensaje enviado! Te responderemos pronto.');
   };
 
   return (
