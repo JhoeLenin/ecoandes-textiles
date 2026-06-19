@@ -3766,17 +3766,204 @@ textarea:focus {
   .admin-content {
     display: block !important;
     margin: 0 !important;
-    padding: 0 !important;
-  }
-  .admin-section {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-  .bar-fill {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+    padding: 12px !important;
   }
   body {
     background: #fff !important;
+    font-size: 11px;
   }
+
+  /* ── Print-only summary ── */
+  .print-only {
+    display: block !important;
+  }
+  .print-report-header {
+    text-align: center;
+    margin-bottom: 12px;
+    border-bottom: 3px solid var(--terracotta, #c47a5a);
+    padding-bottom: 8px;
+  }
+  .print-report-header h2 {
+    font-size: 18px;
+    margin: 0 0 4px;
+    color: var(--terracotta, #c47a5a);
+  }
+  .print-report-header p {
+    font-size: 11px;
+    color: #666;
+    margin: 0;
+  }
+  .print-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px;
+    margin-bottom: 10px;
+  }
+  .print-summary-table th,
+  .print-summary-table td {
+    border: 1px solid #ddd;
+    padding: 3px 6px;
+    text-align: left;
+  }
+  .print-summary-table th {
+    background: var(--terracotta, #c47a5a) !important;
+    color: #fff !important;
+    font-weight: 700;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .print-summary-table td:last-child {
+    font-weight: 600;
+    text-align: right;
+  }
+  .print-two-col {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .print-two-col > div { flex: 1; }
+  .print-two-col h3 {
+    font-size: 11px;
+    margin: 0 0 4px;
+    color: var(--forest, #2d5016);
+    border-bottom: 1px solid var(--forest, #2d5016);
+    padding-bottom: 2px;
+  }
+
+  /* ── Secciones compactas con color ── */
+  .print-compact {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 10px !important;
+    padding: 8px !important;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  .print-compact > h2 {
+    font-size: 12px;
+    margin: 0 0 6px;
+    padding: 4px 8px;
+    border-radius: 3px;
+    color: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .print-compact:nth-of-type(1) > h2 { background: var(--terracotta, #c47a5a) !important; }
+  .print-compact:nth-of-type(2) > h2 { background: var(--forest, #2d5016) !important; }
+  .print-compact:nth-of-type(3) > h2 { background: var(--gold, #b8860b) !important; }
+  .print-compact:nth-of-type(4) > h2 { background: var(--sage, #8fae7e) !important; color: #1a1a1a !important; }
+  .print-compact:nth-of-type(5) > h2 { background: var(--clay, #a0522d) !important; }
+
+  .print-compact .stats-grid {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .print-compact .stat-card {
+    flex: 1;
+    padding: 4px 8px;
+    border: 1px solid #eee;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+  }
+  .print-compact .stat-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    flex-shrink: 0;
+  }
+  .print-compact .stat-value {
+    font-size: 12px;
+    font-weight: 700;
+    display: block;
+  }
+  .print-compact .stat-label {
+    font-size: 9px;
+    color: #666;
+    display: block;
+  }
+
+  .print-compact .form-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .print-compact .form-row > div { flex: 1; }
+
+  .print-compact .admin-table {
+    font-size: 9px;
+  }
+  .print-compact .admin-table th {
+    padding: 3px 5px;
+    font-size: 9px;
+  }
+  .print-compact .admin-table td {
+    padding: 2px 5px;
+  }
+
+  .print-compact .chart-title {
+    font-size: 10px;
+    margin: 4px 0 2px;
+  }
+
+  .print-compact .bar-chart {
+    font-size: 9px;
+  }
+  .print-compact .bar-row {
+    margin-bottom: 2px;
+  }
+  .print-compact .bar-label {
+    font-size: 9px;
+    min-width: 60px;
+  }
+  .print-compact .bar-value {
+    font-size: 9px;
+  }
+  .print-compact .bar-track {
+    height: 10px;
+  }
+  .print-compact .bar-fill {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    height: 10px;
+  }
+
+  .print-compact .bar-group {
+    margin-bottom: 3px;
+  }
+  .print-compact .bar-pair {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .print-compact .bar-inline-value {
+    font-size: 8px;
+  }
+  .print-compact .bar-legend {
+    font-size: 9px;
+  }
+
+  .print-compact .table-wrap {
+    margin-bottom: 4px;
+  }
+
+  .badge {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* Ocultar en pantalla */
+.print-only {
+  display: none;
 }

@@ -142,7 +142,7 @@ export default function Dashboard() {
 
   return (
     <div className="admin-page">
-      <div className="dashboard-welcome">
+      <div className="dashboard-welcome no-print">
         <div>
           <h1 className="admin-title">{getGreeting()}, Admin</h1>
           <p className="dashboard-subtitle">Resumen de tu tienda EcoAndes Textiles</p>
@@ -160,7 +160,48 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="stats-grid stats-grid-primary">
+      {/* ── Resumen ejecutivo (solo imprime) ── */}
+      <div className="print-only">
+        <div className="print-report-header">
+          <h2>Dashboard — EcoAndes Textiles</h2>
+          <p>{getGreeting()} · {new Date().toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
+        </div>
+
+        <table className="print-summary-table">
+          <thead><tr><th>Métrica</th><th>Valor</th></tr></thead>
+          <tbody>
+            <tr><td>Ingresos totales</td><td>{formatPrice(stats.totalRevenue)}</td></tr>
+            <tr><td>Pedidos hoy</td><td>{stats.todayOrders.length} ({formatPrice(stats.todayRevenue)})</td></tr>
+            <tr><td>Pedidos pendientes</td><td>{stats.pendingOrders.length}</td></tr>
+            <tr><td>Productos</td><td>{products.length} ({stats.outOfStock.length} agotados)</td></tr>
+            <tr><td>Clientes CRM</td><td>{clientes.length}</td></tr>
+            <tr><td>Campañas activas</td><td>{stats.activeCampanas.length}</td></tr>
+            <tr><td>Reclamos abiertos</td><td>{stats.openReclamos.length}</td></tr>
+            <tr><td>Sugerencias nuevas</td><td>{stats.newSugerencias.length}</td></tr>
+          </tbody>
+        </table>
+
+        {stats.recentOrders.length > 0 && (
+          <>
+            <h3>Últimos 5 pedidos</h3>
+            <table className="print-summary-table">
+              <thead><tr><th>Cliente</th><th>Total</th><th>Estado</th><th>Fecha</th></tr></thead>
+              <tbody>
+                {stats.recentOrders.map((o) => (
+                  <tr key={o.id}>
+                    <td>{o.customer?.name || '—'}</td>
+                    <td>{formatPrice(o.total || 0)}</td>
+                    <td>{o.status}</td>
+                    <td>{o.createdAt ? new Date(o.createdAt).toLocaleDateString('es-PE') : '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        )}
+      </div>
+
+      <div className="stats-grid stats-grid-primary no-print">
         {primaryStats.map((s) => (
           <Link to={s.link} key={s.label} className="stat-card stat-card-interactive">
             <div className="stat-icon-lg" style={{ background: s.bg, color: s.color }}>
@@ -176,7 +217,7 @@ export default function Dashboard() {
       </div>
 
       <div className="admin-grid-2col">
-        <div className="admin-section">
+        <div className="admin-section no-print">
           <div className="section-header">
             <h2><i className="fa-solid fa-clock-rotate-left" /> Últimos Pedidos</h2>
             <Link to="/admin/pedidos" className="section-link">Ver todos →</Link>
@@ -211,7 +252,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="admin-section">
+        <div className="admin-section no-print">
           <div className="section-header">
             <h2><i className="fa-solid fa-triangle-exclamation" /> Alertas</h2>
           </div>
@@ -269,7 +310,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="admin-section">
+      <div className="admin-section no-print">
         <div className="section-header">
           <h2><i className="fa-solid fa-users-gear" /> CRM Overview</h2>
           <Link to="/admin/reportes" className="section-link">Ver reportes →</Link>
@@ -289,7 +330,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="admin-grid-2col">
+      <div className="admin-grid-2col no-print">
         <div className="admin-section">
           <div className="section-header">
             <h2><i className="fa-solid fa-box" /> Inventario</h2>

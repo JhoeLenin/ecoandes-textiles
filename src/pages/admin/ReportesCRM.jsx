@@ -115,8 +115,78 @@ export default function ReportesCRM() {
       </div>
       <p className="report-print-date">Generado: {new Date().toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
 
+      {/* ── Resumen ejecutivo (solo imprime) ── */}
+      <div className="print-only">
+        <div className="print-report-header">
+          <h2>Reporte CRM — EcoAndes Textiles</h2>
+          <p>Fecha: {new Date().toLocaleDateString('es-PE', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
+        </div>
+
+        <table className="print-summary-table">
+          <thead><tr><th>Métrica</th><th>Valor</th></tr></thead>
+          <tbody>
+            <tr><td>Clientes totales</td><td>{clientes.length}</td></tr>
+            <tr><td>Campañas registradas</td><td>{campanas.length}</td></tr>
+            <tr><td>Presupuesto campañas</td><td>S/ {campTotalBudget.toFixed(2)}</td></tr>
+            <tr><td>Resultado campañas</td><td>S/ {campTotalResult.toFixed(2)}</td></tr>
+            <tr><td>Desviación campañas</td><td>S/ {(campTotalResult - campTotalBudget).toFixed(2)}</td></tr>
+            <tr><td>Promociones registradas</td><td>{offers.length}</td></tr>
+            <tr><td>Presupuesto promociones</td><td>S/ {offTotalBudget.toFixed(2)}</td></tr>
+            <tr><td>Resultado promociones</td><td>S/ {offTotalResult.toFixed(2)}</td></tr>
+            <tr><td>Sugerencias totales</td><td>{sugerencias.length}</td></tr>
+            <tr><td>Reclamos totales</td><td>{reclamos.length}</td></tr>
+          </tbody>
+        </table>
+
+        <div className="print-two-col">
+          <div>
+            <h3>Clientes por sector</h3>
+            <table className="print-summary-table">
+              <thead><tr><th>Sector</th><th>Cantidad</th></tr></thead>
+              <tbody>
+                {SECTORES.map((s) => <tr key={s}><td>{s}</td><td>{porSector[s] || 0}</td></tr>)}
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <h3>Clientes por tienda</h3>
+            <table className="print-summary-table">
+              <thead><tr><th>Tienda</th><th>Cantidad</th></tr></thead>
+              <tbody>
+                {TIENDAS.map((t) => <tr key={t}><td>{t}</td><td>{porTienda[t] || 0}</td></tr>)}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="print-two-col">
+          <div>
+            <h3>Sugerencias por categoría</h3>
+            <table className="print-summary-table">
+              <thead><tr><th>Categoría</th><th>Cantidad</th></tr></thead>
+              <tbody>
+                {Object.entries(sugPorCategoria).map(([cat, count]) => <tr key={cat}><td>{cat}</td><td>{count}</td></tr>)}
+                {sugerencias.length === 0 && <tr><td colSpan="2">Sin datos</td></tr>}
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <h3>Reclamos por estado</h3>
+            <table className="print-summary-table">
+              <thead><tr><th>Estado</th><th>Cantidad</th><th>%</th></tr></thead>
+              <tbody>
+                {Object.entries(recPorEstado).map(([st, count]) => (
+                  <tr key={st}><td>{st}</td><td>{count}</td><td>{reclamos.length > 0 ? ((count / reclamos.length) * 100).toFixed(0) : 0}%</td></tr>
+                ))}
+                {reclamos.length === 0 && <tr><td colSpan="3">Sin datos</td></tr>}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       {/* Reporte 1 */}
-      <div className="admin-section">
+      <div className="admin-section print-compact">
         <h2><i className="fa-solid fa-users" /> 1. Nuevos clientes por sector y tienda</h2>
         <div className="stats-grid">
           <div className="stat-card">
@@ -176,7 +246,7 @@ export default function ReportesCRM() {
       </div>
 
       {/* Reporte 2 */}
-      <div className="admin-section">
+      <div className="admin-section print-compact">
         <h2><i className="fa-solid fa-bullhorn" /> 2. Presupuesto vs resultado de campañas</h2>
         <div className="stats-grid">
           <div className="stat-card">
@@ -220,7 +290,7 @@ export default function ReportesCRM() {
       </div>
 
       {/* Reporte 3 */}
-      <div className="admin-section">
+      <div className="admin-section print-compact">
         <h2><i className="fa-solid fa-percent" /> 3. Presupuesto vs resultado de promociones</h2>
         <div className="stats-grid">
           <div className="stat-card">
@@ -263,7 +333,7 @@ export default function ReportesCRM() {
       </div>
 
       {/* Reporte 4 */}
-      <div className="admin-section">
+      <div className="admin-section print-compact">
         <h2><i className="fa-solid fa-lightbulb" /> 4. Lista y análisis de sugerencias</h2>
         <div className="form-row" style={{ alignItems: 'flex-start' }}>
           <div className="table-wrap" style={{ flex: 1 }}>
@@ -298,7 +368,7 @@ export default function ReportesCRM() {
       </div>
 
       {/* Reporte 5 */}
-      <div className="admin-section">
+      <div className="admin-section print-compact">
         <h2><i className="fa-solid fa-triangle-exclamation" /> 5. Lista y análisis de reclamos</h2>
         <div className="table-wrap">
           <table className="admin-table">
