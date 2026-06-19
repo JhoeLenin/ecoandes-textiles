@@ -240,6 +240,7 @@ export default function Offers() {
               <th>Descuento</th>
               <th>Período</th>
               <th>Presup. / Result.</th>
+              <th>Ganancia</th>
               <th>Estado</th>
               <th>Productos</th>
               <th>Acciones</th>
@@ -250,6 +251,7 @@ export default function Offers() {
               const discText = o.discountType === 'percent'
                 ? `${o.discountValue}%`
                 : `S/ ${o.discountValue}`;
+              const ganancia = (Number(o.result) || 0) - (Number(o.budget) || 0);
               const now = new Date();
               const start = o.startDate ? new Date(o.startDate) : null;
               const end = o.endDate ? new Date(o.endDate) : null;
@@ -266,6 +268,9 @@ export default function Offers() {
                   <td>
                     S/ {Number(o.budget || 0).toFixed(2)}
                     <div className="cell-sub">Result: S/ {Number(o.result || 0).toFixed(2)}</div>
+                  </td>
+                  <td className={ganancia >= 0 ? 'diff-pos' : 'diff-neg'}>
+                    {ganancia >= 0 ? '+' : ''}S/ {ganancia.toFixed(2)}
                   </td>
                   <td>
                     <span className={`badge ${isExpired ? 'badge-danger' : isFuture ? 'badge-warning' : o.active ? 'badge-success' : 'badge-default'}`}>
@@ -285,7 +290,7 @@ export default function Offers() {
               );
             })}
             {offers.length === 0 && (
-              <tr><td colSpan="7" className="empty-row">Sin ofertas creadas</td></tr>
+              <tr><td colSpan="8" className="empty-row">Sin ofertas creadas</td></tr>
             )}
           </tbody>
         </table>
