@@ -14,6 +14,7 @@ export default function Offers() {
     discountValue: '',
     budget: '',
     result: '',
+    cumulative: false,
     startDate: '',
     endDate: '',
     active: true,
@@ -23,7 +24,7 @@ export default function Offers() {
 
   const openNew = () => {
     setEditing(null);
-    setForm({ name: '', discountType: 'percent', discountValue: '', budget: '', result: '', startDate: '', endDate: '', active: true, productIds: [] });
+    setForm({ name: '', discountType: 'percent', discountValue: '', budget: '', result: '', cumulative: false, startDate: '', endDate: '', active: true, productIds: [] });
     setShowForm(true);
   };
 
@@ -35,6 +36,7 @@ export default function Offers() {
       discountValue: o.discountValue || '',
       budget: o.budget ?? '',
       result: o.result ?? '',
+      cumulative: o.cumulative ?? false,
       startDate: o.startDate || '',
       endDate: o.endDate || '',
       active: o.active ?? true,
@@ -204,6 +206,18 @@ export default function Offers() {
               </div>
 
               <div className="form-group">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={form.cumulative}
+                    onChange={(e) => setForm({ ...form, cumulative: e.target.checked })}
+                    style={{ width: 'auto', marginRight: '0.5rem' }}
+                  />
+                  Oferta acumulable (se suma a otras promociones)
+                </label>
+              </div>
+
+              <div className="form-group">
                 <label>Productos incluidos</label>
                 <div className="product-checkbox-list">
                   {products.map((p) => (
@@ -260,7 +274,12 @@ export default function Offers() {
 
               return (
                 <tr key={o.id}>
-                  <td>{o.name}</td>
+                  <td>
+                    {o.name}
+                    {o.cumulative && (
+                      <span className="badge badge-info" style={{ marginLeft: '0.4rem' }}>Acumulable</span>
+                    )}
+                  </td>
                   <td>{discText}</td>
                   <td>
                     {o.startDate || '—'} → {o.endDate || '—'}
