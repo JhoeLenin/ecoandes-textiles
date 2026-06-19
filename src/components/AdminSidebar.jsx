@@ -1,4 +1,5 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 
@@ -45,6 +46,12 @@ const navGroups = [
 export default function AdminSidebar() {
   const { logout, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     await logout();
@@ -53,53 +60,61 @@ export default function AdminSidebar() {
   };
 
   return (
-    <aside className="admin-sidebar">
-      <div className="sidebar-header">
-        <img src="/img/logo.png" alt="EcoAndes" className="sidebar-logo" />
-        <div className="sidebar-brand">
-          <span className="sidebar-brand-name">EcoAndes</span>
-          <span className="sidebar-brand-role">Panel Admin</span>
-        </div>
-      </div>
+    <>
+      <button className="admin-menu-toggle" onClick={() => setOpen(!open)} aria-label="Menú">
+        <i className={`fa-solid ${open ? 'fa-xmark' : 'fa-bars'}`} />
+      </button>
 
-      <nav className="sidebar-nav">
-        {navGroups.map((group) => (
-          <div key={group.title} className="sidebar-group">
-            <div className="sidebar-group-title">{group.title}</div>
-            {group.links.map((l) => (
-              <NavLink
-                key={l.to}
-                to={l.to}
-                end={l.end}
-                className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
-              >
-                <i className={`fa-solid ${l.icon}`} />
-                <span>{l.label}</span>
-              </NavLink>
-            ))}
-          </div>
-        ))}
-      </nav>
+      {open && <div className="admin-sidebar-backdrop" onClick={() => setOpen(false)} />}
 
-      <div className="sidebar-footer">
-        <div className="sidebar-user">
-          <div className="sidebar-user-avatar">
-            {(user?.email || 'A').charAt(0).toUpperCase()}
-          </div>
-          <div className="sidebar-user-info">
-            <span className="sidebar-user-name">{user?.email?.split('@')[0] || 'Admin'}</span>
-            <span className="sidebar-user-email">{user?.email || ''}</span>
+      <aside className={`admin-sidebar ${open ? 'open' : ''}`}>
+        <div className="sidebar-header">
+          <img src="/img/logo.png" alt="EcoAndes" className="sidebar-logo" />
+          <div className="sidebar-brand">
+            <span className="sidebar-brand-name">EcoAndes</span>
+            <span className="sidebar-brand-role">Panel Admin</span>
           </div>
         </div>
-        <NavLink to="/" className="sidebar-link">
-          <i className="fa-solid fa-store" />
-          <span>Ver tienda</span>
-        </NavLink>
-        <button className="sidebar-link sidebar-logout" onClick={handleLogout}>
-          <i className="fa-solid fa-right-from-bracket" />
-          <span>Cerrar sesión</span>
-        </button>
-      </div>
-    </aside>
+
+        <nav className="sidebar-nav">
+          {navGroups.map((group) => (
+            <div key={group.title} className="sidebar-group">
+              <div className="sidebar-group-title">{group.title}</div>
+              {group.links.map((l) => (
+                <NavLink
+                  key={l.to}
+                  to={l.to}
+                  end={l.end}
+                  className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
+                >
+                  <i className={`fa-solid ${l.icon}`} />
+                  <span>{l.label}</span>
+                </NavLink>
+              ))}
+            </div>
+          ))}
+        </nav>
+
+        <div className="sidebar-footer">
+          <div className="sidebar-user">
+            <div className="sidebar-user-avatar">
+              {(user?.email || 'A').charAt(0).toUpperCase()}
+            </div>
+            <div className="sidebar-user-info">
+              <span className="sidebar-user-name">{user?.email?.split('@')[0] || 'Admin'}</span>
+              <span className="sidebar-user-email">{user?.email || ''}</span>
+            </div>
+          </div>
+          <NavLink to="/" className="sidebar-link">
+            <i className="fa-solid fa-store" />
+            <span>Ver tienda</span>
+          </NavLink>
+          <button className="sidebar-link sidebar-logout" onClick={handleLogout}>
+            <i className="fa-solid fa-right-from-bracket" />
+            <span>Cerrar sesión</span>
+          </button>
+        </div>
+      </aside>
+    </>
   );
 }
