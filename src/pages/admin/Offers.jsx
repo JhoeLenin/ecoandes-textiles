@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { useOffers } from '../../hooks/useOffers';
 import { useProducts } from '../../hooks/useProducts';
+import { useCategories } from '../../hooks/useCategories';
 import toast from 'react-hot-toast';
 
 export default function Offers() {
   const { offers, loading, addOffer, updateOffer, deleteOffer } = useOffers();
   const { products } = useProducts();
+  const { categories } = useCategories();
+  const [prodCat, setProdCat] = useState('');
+  const [prodSearch, setProdSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({
@@ -218,18 +222,40 @@ export default function Offers() {
               </div>
 
               <div className="form-group">
-                <label>Productos incluidos</label>
+                <label>Productos incluidos ({form.productIds.length} seleccionados)</label>
+                <div className="form-row">
+                  <select value={prodCat} onChange={(e) => setProdCat(e.target.value)}>
+                    <option value="">Todas las categorías</option>
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
+                  </select>
+                  <input
+                    type="search"
+                    placeholder="Buscar producto..."
+                    value={prodSearch}
+                    onChange={(e) => setProdSearch(e.target.value)}
+                  />
+                </div>
                 <div className="product-checkbox-list">
-                  {products.map((p) => (
-                    <label key={p.id} className="checkbox-item">
-                      <input
-                        type="checkbox"
-                        checked={form.productIds.includes(p.id)}
-                        onChange={() => toggleProduct(p.id)}
-                      />
-                      {p.name}
-                    </label>
-                  ))}
+                  {products
+                    .filter((p) => !prodCat || p.category === prodCat)
+                    .filter((p) => !prodSearch || p.name?.toLowerCase().includes(prodSearch.toLowerCase()))
+                    .map((p) => (
+                      <label key={p.id} className="checkbox-item">
+                        <input
+                          type="checkbox"
+                          checked={form.productIds.includes(p.id)}
+                          onChange={() => toggleProduct(p.id)}
+                        />
+                        {p.name}
+                      </label>
+                    ))}
+                  {products.filter((p) => !prodCat || p.category === prodCat)
+                    .filter((p) => !prodSearch || p.name?.toLowerCase().includes(prodSearch.toLowerCase()))
+                    .length === 0 && (
+                    <p className="empty-msg" style={{ padding: '0.75rem' }}>Sin productos</p>
+                  )}
                 </div>
               </div>
 
