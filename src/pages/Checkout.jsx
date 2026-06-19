@@ -110,14 +110,6 @@ export default function Checkout() {
         createdAt: new Date().toISOString(),
       });
 
-      await addDoc(collection(db, 'users'), {
-        name: form.nombre.value.trim(),
-        email: form.email.value.trim(),
-        phone: form.telefono.value.trim(),
-        role: 'cliente',
-        createdAt: new Date().toISOString(),
-      }).catch(() => {});
-
       clearCart();
       setConfirmed(form.nombre.value.trim());
       toast.success('Pedido registrado exitosamente');

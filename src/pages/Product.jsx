@@ -104,8 +104,12 @@ export default function Product() {
                 <span className="qty-value">{qty}</span>
                 <button className="qty-btn" onClick={() => setQty(Math.min(product.stock, qty + 1))} aria-label="Aumentar">+</button>
               </div>
-              <button className="btn btn-primary btn-lg" onClick={() => addToCart(id, qty)}>
-                <i className="fa-solid fa-cart-plus" /> Agregar al Carrito
+              <button
+                className="btn btn-primary btn-lg"
+                onClick={() => addToCart(id, qty)}
+                disabled={product.stock <= 0}
+              >
+                <i className="fa-solid fa-cart-plus" /> {product.stock > 0 ? 'Agregar al Carrito' : 'Agotado'}
               </button>
             </div>
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
@@ -10,14 +10,11 @@ export default function Login() {
   const { login, user, isAdmin } = useAuth();
   const navigate = useNavigate();
 
-  if (user) {
-    if (isAdmin) {
-      navigate('/admin', { replace: true });
-    } else {
-      navigate('/', { replace: true });
+  useEffect(() => {
+    if (user) {
+      navigate(isAdmin ? '/admin' : '/', { replace: true });
     }
-    return null;
-  }
+  }, [user, isAdmin, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { doc, onSnapshot, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useAuth } from '../context/AuthContext';
 
@@ -23,12 +23,15 @@ export function useFavorites() {
   const toggleFavorite = useCallback(
     async (id) => {
       if (!user) return;
-      const next = favorites.includes(id)
-        ? favorites.filter((x) => x !== id)
-        : [...favorites, id];
-      await setDoc(doc(db, 'favorites', user.uid), { productIds: next }, { merge: true });
+      const ref = doc(db, 'favorites', user.uid);
+      const snap = await getDoc(ref);
+      const current = snap.exists() ? snap.data().productIds || [] : [];
+      const next = current.includes(id)
+        ? current.filter((x) => x !== id)
+        : [...current, id];
+      await setDoc(ref, { productIds: next }, { merge: true });
     },
-    [user, favorites]
+    [user]
   );
 
   const isFavorite = useCallback((id) => favorites.includes(id), [favorites]);

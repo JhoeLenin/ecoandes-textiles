@@ -19,7 +19,12 @@ export default function Shop() {
     }
     if (search) {
       const q = search.toLowerCase();
-      l = l.filter((p) => p.name.toLowerCase().includes(q));
+      l = l.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.description.toLowerCase().includes(q) ||
+          CATEGORIES.find((c) => c.id === p.category)?.name.toLowerCase().includes(q)
+      );
     }
     if (sort === 'price-asc') l.sort((a, b) => a.priceOffer - b.priceOffer);
     if (sort === 'price-desc') l.sort((a, b) => b.priceOffer - a.priceOffer);

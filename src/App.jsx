@@ -30,6 +30,7 @@ import SeedDb from './pages/admin/SeedDb';
 import Cuenta from './pages/Cuenta';
 import MisPedidos from './pages/MisPedidos';
 import Perfil from './pages/Perfil';
+import Favoritos from './pages/Favoritos';
 import { Toaster } from 'react-hot-toast';
 
 function ScrollToTop() {
@@ -74,6 +75,7 @@ export default function App() {
             <Route path="/cuenta" element={<Cuenta />} />
           <Route path="/mis-pedidos" element={<MisPedidos />} />
           <Route path="/perfil" element={<Perfil />} />
+          <Route path="/favoritos" element={<Favoritos />} />
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Dashboard />} />
               <Route path="productos" element={<Products />} />

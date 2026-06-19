@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 import HeroCarousel from '../components/HeroCarousel';
 import ProductCard, { Stars } from '../components/ProductCard';
 import { CATEGORIES, PRODUCTS } from '../data/products';
@@ -41,9 +43,17 @@ export default function Home() {
   const { showToast } = useCart();
   const [email, setEmail] = useState('');
 
-  const handleNewsletter = (e) => {
+  const handleNewsletter = async (e) => {
     e.preventDefault();
     if (!e.target.reportValidity()) return;
+    try {
+      await addDoc(collection(db, 'newsletter'), {
+        email,
+        createdAt: new Date().toISOString(),
+      });
+    } catch {
+      // silent
+    }
     setEmail('');
     showToast('¡Gracias por suscribirte! Recibirás nuestras novedades.');
   };

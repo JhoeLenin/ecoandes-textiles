@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { updateProfile, updatePassword } from 'firebase/auth';
@@ -11,10 +11,11 @@ export default function Perfil() {
   const [newPassword, setNewPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  if (!user || isAdmin) {
-    navigate('/', { replace: true });
-    return null;
-  }
+  useEffect(() => {
+    if (!user || isAdmin) {
+      navigate('/', { replace: true });
+    }
+  }, [user, isAdmin, navigate]);
 
   const handleName = async (e) => {
     e.preventDefault();

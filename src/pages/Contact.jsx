@@ -1,13 +1,27 @@
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 import { STORE } from '../data/products';
 import { useCart } from '../context/CartContext';
 
 export default function Contact() {
   const { showToast } = useCart();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!e.target.reportValidity()) return;
-    e.target.reset();
+    const form = e.target;
+    try {
+      await addDoc(collection(db, 'messages'), {
+        name: form.nombre.value.trim(),
+        email: form.email.value.trim(),
+        subject: form.asunto.value.trim(),
+        message: form.mensaje.value.trim(),
+        createdAt: new Date().toISOString(),
+      });
+    } catch {
+      // silent
+    }
+    form.reset();
     showToast('¡Mensaje enviado! Te responderemos pronto.');
   };
 

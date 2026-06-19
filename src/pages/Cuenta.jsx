@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
@@ -12,39 +12,42 @@ export default function Cuenta() {
   const { login, register, user, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
 
-  if (user) {
-    if (isAdmin) {
+  useEffect(() => {
+    if (user && isAdmin) {
       navigate('/admin', { replace: true });
-    } else {
-      return (
-        <section className="section">
-          <div className="container" style={{ maxWidth: 480, textAlign: 'center' }}>
-            <i className="fa-solid fa-circle-user" style={{ fontSize: '3rem', color: 'var(--terracotta)', marginBottom: '0.75rem' }} />
-            <h1 style={{ marginBottom: '0.25rem' }}>Hola, {user.displayName || user.email}</h1>
-            <p style={{ color: 'var(--ink-soft)', marginBottom: '1.5rem' }}>{user.email}</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <Link to="/mis-pedidos" className="btn btn-primary btn-block">
-                <i className="fa-solid fa-box" /> Mis Pedidos
-              </Link>
-              <Link to="/favoritos" className="btn btn-outline btn-block">
-                <i className="fa-solid fa-heart" /> Mis Favoritos
-              </Link>
-              <Link to="/perfil" className="btn btn-outline btn-block">
-                <i className="fa-solid fa-gear" /> Mi Perfil
-              </Link>
-              <button
-                className="btn btn-outline btn-block"
-                onClick={async () => { await logout(); toast.success('Sesión cerrada'); }}
-              >
-                <i className="fa-solid fa-right-from-bracket" /> Cerrar Sesión
-              </button>
-            </div>
-          </div>
-        </section>
-      );
     }
-    return null;
+  }, [user, isAdmin, navigate]);
+
+  if (user && !isAdmin) {
+    return (
+      <section className="section">
+        <div className="container" style={{ maxWidth: 480, textAlign: 'center' }}>
+          <i className="fa-solid fa-circle-user" style={{ fontSize: '3rem', color: 'var(--terracotta)', marginBottom: '0.75rem' }} />
+          <h1 style={{ marginBottom: '0.25rem' }}>Hola, {user.displayName || user.email}</h1>
+          <p style={{ color: 'var(--ink-soft)', marginBottom: '1.5rem' }}>{user.email}</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <Link to="/mis-pedidos" className="btn btn-primary btn-block">
+              <i className="fa-solid fa-box" /> Mis Pedidos
+            </Link>
+            <Link to="/favoritos" className="btn btn-outline btn-block">
+              <i className="fa-solid fa-heart" /> Mis Favoritos
+            </Link>
+            <Link to="/perfil" className="btn btn-outline btn-block">
+              <i className="fa-solid fa-gear" /> Mi Perfil
+            </Link>
+            <button
+              className="btn btn-outline btn-block"
+              onClick={async () => { await logout(); toast.success('Sesión cerrada'); }}
+            >
+              <i className="fa-solid fa-right-from-bracket" /> Cerrar Sesión
+            </button>
+          </div>
+        </div>
+      </section>
+    );
   }
+
+  if (user && isAdmin) return null;
 
   const handleLogin = async (e) => {
     e.preventDefault();
