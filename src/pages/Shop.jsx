@@ -91,8 +91,13 @@ export default function Shop() {
           </aside>
 
           <div>
-            {(category || search) && (
+            {(category || search || genero) && (
               <div className="active-filters">
+                {genero && (
+                  <button className="filter-chip" onClick={() => setGenero('')}>
+                    {GENEROS_TIENDA.find((g) => g.value === genero)?.label} <i className="fa-solid fa-xmark" />
+                  </button>
+                )}
                 {category && (
                   <button className="filter-chip" onClick={() => setCategory('')}>
                     {CATEGORIES.find((c) => c.id === category)?.name} <i className="fa-solid fa-xmark" />
@@ -130,7 +135,11 @@ export default function Shop() {
                 ))}
               </div>
             ) : (
-              <p className="no-results">No se encontraron productos. Prueba con otros filtros.</p>
+              <div className="empty-state" style={{ padding: '3rem 0' }}>
+                <i className="fa-solid fa-magnifying-glass" />
+                <h2>No se encontraron productos</h2>
+                <p>Prueba con otros filtros o términos de búsqueda.</p>
+              </div>
             )}
           </div>
         </div>

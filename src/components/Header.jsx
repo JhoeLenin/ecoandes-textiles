@@ -32,7 +32,7 @@ export default function Header() {
           <img src="/img/logo.png" alt="EcoAndes Textiles" className="logo-img" />
         </Link>
 
-        <nav className={`main-nav ${open ? 'open' : ''}`}>
+        <nav className={`main-nav ${open ? 'open' : ''}`} aria-expanded={open}>
           {links.map((l) => (
             <NavLink
               key={l.to}
@@ -69,13 +69,14 @@ export default function Header() {
           )}
           <Link to="/carrito" className="cart-link" aria-label="Carrito">
             <i className="fa-solid fa-cart-shopping" />
-            {count > 0 && <span className="cart-badge">{count}</span>}
+            {count > 0 && <span className="cart-badge" aria-live="polite">{count}</span>}
           </Link>
-          <button className="hamburger" aria-label="Menú" onClick={() => setOpen(!open)}>
+          <button className="hamburger" aria-label="Menú" aria-expanded={open} onClick={() => setOpen(!open)}>
             <i className={`fa-solid ${open ? 'fa-xmark' : 'fa-bars'}`} />
           </button>
         </div>
       </div>
+      {open && <div className="nav-backdrop" onClick={() => setOpen(false)} />}
     </header>
   );
 }

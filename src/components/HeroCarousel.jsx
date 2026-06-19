@@ -29,6 +29,7 @@ const INTERVAL = 5000;
 
 export default function HeroCarousel() {
   const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
   const timerRef = useRef(null);
 
   const go = useCallback((i) => {
@@ -36,14 +37,20 @@ export default function HeroCarousel() {
   }, []);
 
   useEffect(() => {
+    if (paused) return;
     timerRef.current = setInterval(() => {
       setIndex((i) => (i + 1) % SLIDES.length);
     }, INTERVAL);
     return () => clearInterval(timerRef.current);
-  }, [index]);
+  }, [index, paused]);
 
   return (
-    <section className="carousel" aria-label="Promociones destacadas">
+    <section
+      className="carousel"
+      aria-label="Promociones destacadas"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
       {SLIDES.map((s, i) => (
         <div key={i} className={`carousel-slide ${i === index ? 'active' : ''}`} aria-hidden={i !== index}>
           <img src={s.img} alt="" />

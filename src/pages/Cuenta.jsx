@@ -9,6 +9,7 @@ export default function Cuenta() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPwd, setShowPwd] = useState(false);
   const { login, register, user, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -127,13 +128,23 @@ export default function Cuenta() {
             </div>
             <div className="form-group">
               <label>Contraseña</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="••••••••"
-              />
+              <div className="password-field">
+                <input
+                  type={showPwd ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder={tab === 'register' ? 'Mínimo 6 caracteres' : '••••••••'}
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowPwd(!showPwd)}
+                  aria-label={showPwd ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                >
+                  <i className={`fa-solid ${showPwd ? 'fa-eye-slash' : 'fa-eye'}`} />
+                </button>
+              </div>
             </div>
             <button className="btn btn-primary btn-block" disabled={loading}>
               {loading ? 'Ingresando...' : 'Iniciar Sesión'}

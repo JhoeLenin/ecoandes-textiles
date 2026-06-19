@@ -60,6 +60,16 @@ a {
   text-decoration: none;
 }
 
+:focus-visible {
+  outline: 2px solid var(--terracotta);
+  outline-offset: 2px;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px;
+}
+
 ul {
   list-style: none;
 }
@@ -89,6 +99,13 @@ main {
   cursor: pointer;
   transition: all var(--transition);
   text-align: center;
+}
+
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .btn-lg {
@@ -195,10 +212,6 @@ main {
 }
 
 .main-nav {
-  display: none;
-}
-
-.main-nav.open {
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -208,8 +221,19 @@ main {
   background: var(--cream);
   border-bottom: 1px solid var(--line);
   box-shadow: var(--shadow-lg);
+  padding: 0 4%;
+  gap: 0;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.35s ease, padding 0.35s ease, opacity 0.25s ease;
+}
+
+.main-nav.open {
+  max-height: 400px;
   padding: 1.2rem 4%;
   gap: 1rem;
+  opacity: 1;
 }
 
 .main-nav a {
@@ -273,6 +297,13 @@ main {
   align-items: center;
   justify-content: center;
   padding: 0 4px;
+  animation: badge-pop 0.3s ease;
+}
+
+@keyframes badge-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+  100% { transform: scale(1); }
 }
 
 .hamburger {
@@ -281,6 +312,18 @@ main {
   font-size: 1.35rem;
   color: var(--ink);
   cursor: pointer;
+  transition: color var(--transition);
+}
+
+.hamburger:hover {
+  color: var(--terracotta);
+}
+
+.nav-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 99;
 }
 
 /* ---------- Carrusel hero ---------- */
@@ -1490,6 +1533,20 @@ textarea:focus {
   text-transform: capitalize;
   color: var(--ink-soft);
   font-size: 0.82rem;
+}
+
+.order-expand {
+  background: none;
+  border: none;
+  color: var(--terracotta);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.3rem 0;
+}
+
+.order-expand:hover {
+  text-decoration: underline;
 }
 
 /* ---------- Perfil ---------- */
@@ -2747,4 +2804,103 @@ textarea:focus {
 .diff-neg {
   color: var(--terracotta-dark);
   font-weight: 600;
+}
+
+/* ---------- UX Improvements ---------- */
+
+/* Skeleton loading */
+.skeleton {
+  background: linear-gradient(90deg, var(--sand) 25%, var(--sand-deep) 50%, var(--sand) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Heart animation */
+@keyframes heart-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+.wishlist-btn.liked i {
+  animation: heart-pop 0.35s ease;
+}
+
+/* Order card hover */
+.order-card {
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.order-card:hover {
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+/* Free shipping notice */
+.free-shipping-notice {
+  background: var(--sage);
+  color: var(--white);
+  text-align: center;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  animation: badge-pop 0.4s ease;
+}
+
+/* Password field */
+.password-field {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  padding: 0.25rem;
+}
+
+.password-toggle:hover {
+  color: var(--terracotta);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+
+/* Cart mobile */
+@media (max-width: 400px) {
+  .cart-row {
+    grid-template-columns: 64px 1fr;
+    grid-template-rows: auto auto auto;
+  }
+  .cart-row .qty-selector { grid-column: 1 / -1; justify-self: start; }
+  .cart-row-subtotal { grid-column: 1 / -1; }
+  .cart-row-remove { grid-column: 1 / -1; justify-self: end; }
+}
+
+/* Sticky summary on desktop */
+@media (min-width: 768px) {
+  .cart-summary {
+    position: sticky;
+    top: 100px;
+  }
 }

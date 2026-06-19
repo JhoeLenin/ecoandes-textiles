@@ -128,6 +128,11 @@ export default function Checkout() {
 
       <section className="section">
         <div className="container checkout-layout">
+          <div>
+            <Link to="/carrito" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', marginBottom: '1.25rem', color: 'var(--ink-soft)', fontSize: '0.9rem' }}>
+              <i className="fa-solid fa-arrow-left" /> Volver al carrito
+            </Link>
+          </div>
           <form onSubmit={handleSubmit} noValidate>
             <h2 className="form-title">Datos de Envío</h2>
             <div className="form-grid">
@@ -175,6 +180,9 @@ export default function Checkout() {
             <button type="submit" className="btn btn-primary btn-block btn-lg" disabled={saving}>
               {saving ? 'Registrando pedido...' : 'Confirmar Pedido'}
             </button>
+            <p style={{ fontSize: '0.8rem', color: 'var(--ink-soft)', textAlign: 'center', marginTop: '0.8rem' }}>
+              Al confirmar, recibirás un email de confirmación y nos contactaremos por WhatsApp.
+            </p>
           </form>
 
           <aside className="cart-summary">

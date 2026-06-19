@@ -57,6 +57,11 @@ export default function Cart() {
 
           <aside className="cart-summary">
             <h3>Resumen</h3>
+            {free && (
+              <div className="free-shipping-notice">
+                <i className="fa-solid fa-truck-fast" /> ¡Envío GRATIS aplicado!
+              </div>
+            )}
             <div className="summary-line"><span>Subtotal</span><span>{formatPrice(subtotal)}</span></div>
             <div className="summary-line">
               <span>Envío estimado</span>

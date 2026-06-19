@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getCategory, productImg, discountPct, formatPrice } from '../data/products';
 import { useCart } from '../context/CartContext';
@@ -30,16 +31,32 @@ export default function ProductCard({ product: p }) {
   const { isFavorite, toggleFavorite } = useFavorites();
   const gate = useAuthGate();
   const { rating, reviews } = ratingFor(p.id);
-  const lowStock = p.stock <= 10;
+  const lowStock = p.stock > 0 && p.stock < 10;
   const liked = isFavorite(p.id);
+  const [justAdded, setJustAdded] = useState(false);
+
+  const handleAdd = () => {
+    gate(() => {
+      addToCart(p.id, 1);
+      setJustAdded(true);
+      setTimeout(() => setJustAdded(false), 1500);
+    });
+  };
 
   return (
     <article className="product-card">
       <Link to={`/producto/${p.id}`} className="card-img-link">
-        <span className="badge-discount">-{discountPct(p)}%</span>
+        {discountPct(p) > 0 && <span className="badge-discount">-{discountPct(p)}%</span>}
         {lowStock && <span className="badge-stock">¡Pocas unidades!</span>}
         <img className="img-front" src={productImg(p.id, 1)} alt={p.name} loading="lazy" />
-        <img className="img-back" src={productImg(p.id, 2)} alt="" loading="lazy" aria-hidden="true" />
+        <img
+          className="img-back"
+          src={productImg(p.id, 2)}
+          alt=""
+          loading="lazy"
+          aria-hidden="true"
+          onError={(e) => { e.target.style.display = 'none'; }}
+        />
       </Link>
 
       <button
@@ -63,8 +80,13 @@ export default function ProductCard({ product: p }) {
           <span className="price-offer">{formatPrice(p.priceOffer)}</span>
           <span className="price-list">{formatPrice(p.priceList)}</span>
         </div>
-        <button className="btn btn-primary btn-add" onClick={() => gate(() => addToCart(p.id, 1))}>
-          <i className="fa-solid fa-cart-plus" /> Agregar al carrito
+        <button
+          className="btn btn-primary btn-add"
+          onClick={handleAdd}
+          disabled={justAdded || p.stock <= 0}
+        >
+          <i className={`fa-solid ${justAdded ? 'fa-check' : p.stock > 0 ? 'fa-cart-plus' : 'fa-ban'}`} />
+          {justAdded ? 'Agregado' : p.stock > 0 ? 'Agregar al carrito' : 'Agotado'}
         </button>
       </div>
     </article>
