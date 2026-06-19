@@ -3,19 +3,21 @@
 Proyecto: EcoAndes (React + Vite + Firebase). Práctica 02 Negocios Electrónicos — prototipo CRM
 sobre el panel admin existente.
 
+> **ESTADO: tus 4 módulos COMPLETADOS y mergeados a `master`.** ✅
+
 ---
 
 ## Tus módulos
 
-| Módulo | Página | Hook | Colección |
-|--------|--------|------|-----------|
-| Clientes CRM | `src/pages/admin/Clientes.jsx` | `src/hooks/useClientes.js` | `clientes` |
-| Campañas | `src/pages/admin/Campanas.jsx` | `src/hooks/useCampanas.js` | `campanas` |
-| Promociones (extender) | `src/pages/admin/Offers.jsx` | `src/hooks/useOffers.js` | `offers` |
-| Dashboard CRM | `src/pages/admin/Dashboard.jsx` | (varios) | — |
+| Módulo | Página | Hook | Colección | Estado |
+|--------|--------|------|-----------|--------|
+| Clientes CRM | `src/pages/admin/Clientes.jsx` | `src/hooks/useClientes.js` | `clientes` | ✅ Hecho |
+| Campañas | `src/pages/admin/Campanas.jsx` | `src/hooks/useCampanas.js` | `campanas` | ✅ Hecho |
+| Promociones (extender) | `src/pages/admin/Offers.jsx` | `src/hooks/useOffers.js` | `offers` | ✅ Hecho |
+| Dashboard CRM | `src/pages/admin/Dashboard.jsx` | (varios) | — | ✅ Hecho |
 
-**Orden:** Clientes PRIMERO. Reclamos, Sugerencias y Reportes (de tu compañera) dependen de
-que `clientes` exista y tenga datos.
+Todos en `master`. Los módulos de tu compañera (Reclamos, Sugerencias, Reportes) también
+están mergeados (PR #1). El CRM funciona de punta a punta.
 
 ---
 
@@ -86,3 +88,11 @@ reclamos abiertos. Reusa los hooks. No rompas las stats de ecommerce ya existent
 
 ## Esquema de datos (referencia)
 Ver `docs/DEV-AMORCITO.md` — mismo esquema compartido.
+
+---
+
+## Pendiente del equipo (no de código)
+- ⬜ **Datos demo CRM** — `seed.mjs` aún NO puebla clientes/campañas/reclamos/sugerencias.
+  Sin datos, los reportes salen en cero. Falta extender el seed o cargar datos a mano.
+- ⬜ **Cuestionario** — 4 preguntas sobre tiendas virtuales (entregable de la guía).
+- ⬜ **Informe + capturas** — documento final de la práctica.

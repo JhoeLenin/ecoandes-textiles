@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, doc, setDoc, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDocs } from 'firebase/firestore';
 
 // Credenciales desde .env (NO hardcodear). Ejecutar con:
 //   node --env-file=.env seed.mjs
@@ -24,6 +24,20 @@ if (missing.length) {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+const now = () => new Date().toISOString();
+
+// Inserta solo si la colección está vacía (idempotente, no duplica producción).
+async function seedIfEmpty(name, label, fn) {
+  const snap = await getDocs(collection(db, name));
+  if (!snap.empty) {
+    console.log(`\n⏭  ${label}: ya tiene ${snap.size} docs, se omite.`);
+    return false;
+  }
+  console.log(`\nCreando ${label}...`);
+  await fn();
+  return true;
+}
+
 const CATEGORIES = [
   { name: 'Chompas y Bufandas' },
   { name: 'Accesorios para el Hogar' },
@@ -45,52 +59,114 @@ const PRODUCTS = [
   { id: 'PROD-12', name: 'Riñonera Textil (20×12)',               category: 'CAT-03', description: 'Riñonera pequeña tejida con cierre zipper y correa ajustable.', specs: { Dimensiones: '20 cm × 12 cm', Colores: 'Azul, beige y mostaza', Diseño: 'Patrones tradicionales' }, priceList: 39, priceOffer: 32.5, stock: 28, featured: false },
 ];
 
+const OFFERS = [
+  { name: 'Liquidación de Temporada', discountType: 'percent', discountValue: 20, budget: 800, result: 1250, cumulative: false, startDate: '2026-06-01', endDate: '2026-07-31', active: true, productIds: ['PROD-01', 'PROD-03', 'PROD-05', 'PROD-08', 'PROD-11'] },
+  { name: 'Envío Gratis + Descuento', discountType: 'fixed', discountValue: 15, budget: 500, result: 430, cumulative: false, startDate: '2026-06-15', endDate: '2026-07-15', active: true, productIds: ['PROD-02', 'PROD-04', 'PROD-06', 'PROD-10'] },
+];
+
+// ---------- CRM ----------
+const CLIENTES = [
+  { name: 'Minera Aruntani SAC',        type: 'prospecto', sector: 'minero',     tienda: 'Cayma',          contactName: 'Juan Pérez',    email: 'compras@aruntani.pe',   phone: '951234567', status: 'activo' },
+  { name: 'Comercial Los Andes EIRL',   type: 'regular',   sector: 'comercial',  tienda: 'Cercado',        contactName: 'María Quispe',  email: 'ventas@losandes.pe',    phone: '952345678', status: 'activo' },
+  { name: 'Textiles del Sur SA',        type: 'proveedor', sector: 'industrial', tienda: 'Cerro Colorado', contactName: 'Carlos Mamani', email: 'info@textilsur.pe',     phone: '953456789', status: 'activo' },
+  { name: 'Hotel Casona Plaza',         type: 'regular',   sector: 'servicios',  tienda: 'Cercado',        contactName: 'Ana Flores',    email: 'reservas@casona.pe',    phone: '954567890', status: 'activo' },
+  { name: 'Distribuidora Paucarpata',   type: 'agente',    sector: 'comercial',  tienda: 'Paucarpata',     contactName: 'Luis Choque',   email: 'dist@paucarpata.pe',    phone: '955678901', status: 'activo' },
+  { name: 'Bordados Hunter',            type: 'regular',   sector: 'hogar',      tienda: 'Hunter',         contactName: 'Rosa Huamán',   email: 'bordados@hunter.pe',    phone: '956789012', status: 'inactivo' },
+  { name: 'Constructora Misti',         type: 'prospecto', sector: 'industrial', tienda: 'Cayma',          contactName: 'Pedro Ríos',    email: 'logistica@misti.pe',    phone: '957890123', status: 'activo' },
+  { name: 'Artesanías Yanahuara',       type: 'regular',   sector: 'comercial',  tienda: 'Cerro Colorado', contactName: 'Elena Vargas',  email: 'arte@yanahuara.pe',     phone: '958901234', status: 'migrado' },
+];
+
+const CAMPANAS = [
+  { name: 'Campaña Invierno B2B',   channel: 'email',    targetSector: 'minero',    budget: 1500, result: 1820, startDate: '2026-06-01', endDate: '2026-06-30', status: 'activa' },
+  { name: 'Feria Regional Arequipa', channel: 'visita',  targetSector: 'comercial', budget: 3000, result: 2400, startDate: '2026-04-10', endDate: '2026-04-20', status: 'finalizada' },
+  { name: 'Promo Día de la Madre',  channel: 'virtual',  targetSector: 'hogar',     budget: 800,  result: 1100, startDate: '2026-05-01', endDate: '2026-05-12', status: 'finalizada' },
+  { name: 'Captación Hoteles',      channel: 'telefono', targetSector: 'servicios', budget: 1200, result: 0,    startDate: '2026-06-10', endDate: '2026-07-10', status: 'activa' },
+];
+
+// clienteIdx referencia el índice en CLIENTES (se resuelve al id real tras crearlos).
+const RECLAMOS = [
+  { clienteIdx: 3, asunto: 'Entrega tardía',      detalle: 'El pedido llegó 5 días después de lo acordado.',        status: 'resuelto',   respuesta: 'Se reprogramó envío y se aplicó descuento del 10%.' },
+  { clienteIdx: 1, asunto: 'Producto defectuoso', detalle: 'Dos chompas llegaron con costuras abiertas.',          status: 'en_proceso', respuesta: '' },
+  { clienteIdx: 0, asunto: 'Factura incorrecta',  detalle: 'La factura no coincide con el monto del pedido.',      status: 'abierto',    respuesta: '' },
+  { clienteIdx: 4, asunto: 'Faltante en pedido',  detalle: 'Faltaron 3 unidades del lote de bufandas.',            status: 'abierto',    respuesta: '' },
+  { clienteIdx: 2, asunto: 'Demora en respuesta', detalle: 'No respondieron la cotización en 1 semana.',           status: 'resuelto',   respuesta: 'Se asignó un ejecutivo de cuenta dedicado.' },
+];
+
+const SUGERENCIAS = [
+  { clienteIdx: 1, categoria: 'producto', texto: 'Ampliar la gama de colores en las chompas de alpaca.',   status: 'nueva' },
+  { clienteIdx: 3, categoria: 'servicio', texto: 'Atención más rápida en el canal de WhatsApp.',           status: 'revisada' },
+  { clienteIdx: 5, categoria: 'entrega',  texto: 'Habilitar entregas los días sábado.',                    status: 'aplicada' },
+  { clienteIdx: 6, categoria: 'precio',   texto: 'Ofrecer descuentos por compras de gran volumen.',        status: 'nueva' },
+  { clienteIdx: 7, categoria: 'otro',     texto: 'Publicar un catálogo digital descargable en PDF.',       status: 'revisada' },
+];
+
 async function seed() {
-  console.log('Poblando Firestore...\n');
+  console.log('Poblando Firestore (idempotente)...');
 
-  // Categories
-  console.log('Creando categorías...');
-  for (const cat of CATEGORIES) {
-    const ref = await addDoc(collection(db, 'categories'), { name: cat.name, image: '' });
-    console.log(`  ✓ ${cat.name} (${ref.id})`);
-  }
+  await seedIfEmpty('categories', 'categorías', async () => {
+    for (const cat of CATEGORIES) {
+      const ref = await addDoc(collection(db, 'categories'), { name: cat.name, image: '' });
+      console.log(`  ✓ ${cat.name} (${ref.id})`);
+    }
+  });
 
-  // Products
-  console.log('\nCreando productos...');
-  for (const p of PRODUCTS) {
-    const ref = await addDoc(collection(db, 'products'), {
-      ...p,
-      images: [],
-      createdAt: new Date().toISOString(),
+  await seedIfEmpty('products', 'productos', async () => {
+    for (const p of PRODUCTS) {
+      const ref = await addDoc(collection(db, 'products'), { ...p, images: [], createdAt: now() });
+      console.log(`  ✓ ${p.id} — ${p.name} (${ref.id})`);
+    }
+  });
+
+  await seedIfEmpty('offers', 'ofertas', async () => {
+    for (const o of OFFERS) {
+      const ref = await addDoc(collection(db, 'offers'), { ...o, createdAt: now() });
+      console.log(`  ✓ ${o.name} (${ref.id})`);
+    }
+  });
+
+  // Clientes: capturamos id+name para enlazar reclamos/sugerencias.
+  const clienteRefs = [];
+  await seedIfEmpty('clientes', 'clientes', async () => {
+    for (const c of CLIENTES) {
+      const ref = await addDoc(collection(db, 'clientes'), { ...c, createdAt: now() });
+      clienteRefs.push({ id: ref.id, name: c.name });
+      console.log(`  ✓ ${c.name} (${ref.id})`);
+    }
+  });
+
+  await seedIfEmpty('campanas', 'campañas', async () => {
+    for (const c of CAMPANAS) {
+      const ref = await addDoc(collection(db, 'campanas'), { ...c, createdAt: now() });
+      console.log(`  ✓ ${c.name} (${ref.id})`);
+    }
+  });
+
+  // Reclamos/sugerencias necesitan los clientes recién creados.
+  if (clienteRefs.length) {
+    await seedIfEmpty('reclamos', 'reclamos', async () => {
+      for (const r of RECLAMOS) {
+        const cli = clienteRefs[r.clienteIdx];
+        const { clienteIdx, ...rest } = r;
+        const ref = await addDoc(collection(db, 'reclamos'), {
+          ...rest, clienteId: cli.id, clienteName: cli.name, createdAt: now(),
+        });
+        console.log(`  ✓ ${r.asunto} — ${cli.name} (${ref.id})`);
+      }
     });
-    console.log(`  ✓ ${p.id} — ${p.name} (${ref.id})`);
+
+    await seedIfEmpty('sugerencias', 'sugerencias', async () => {
+      for (const s of SUGERENCIAS) {
+        const cli = clienteRefs[s.clienteIdx];
+        const { clienteIdx, ...rest } = s;
+        const ref = await addDoc(collection(db, 'sugerencias'), {
+          ...rest, clienteId: cli.id, clienteName: cli.name, createdAt: now(),
+        });
+        console.log(`  ✓ ${s.categoria} — ${cli.name} (${ref.id})`);
+      }
+    });
+  } else {
+    console.log('\n⏭  reclamos/sugerencias: requieren clientes nuevos, se omiten (clientes ya existían).');
   }
-
-  // Offers
-  console.log('\nCreando ofertas...');
-  const offer1 = await addDoc(collection(db, 'offers'), {
-    name: 'Liquidación de Temporada',
-    discountType: 'percent',
-    discountValue: 20,
-    startDate: '2026-06-01',
-    endDate: '2026-07-31',
-    active: true,
-    productIds: ['PROD-01', 'PROD-03', 'PROD-05', 'PROD-08', 'PROD-11'],
-    createdAt: new Date().toISOString(),
-  });
-  console.log(`  ✓ Liquidación de Temporada (${offer1.id})`);
-
-  const offer2 = await addDoc(collection(db, 'offers'), {
-    name: 'Envío Gratis + Descuento',
-    discountType: 'fixed',
-    discountValue: 15,
-    startDate: '2026-06-15',
-    endDate: '2026-07-15',
-    active: true,
-    productIds: ['PROD-02', 'PROD-04', 'PROD-06', 'PROD-10'],
-    createdAt: new Date().toISOString(),
-  });
-  console.log(`  ✓ Envío Gratis + Descuento (${offer2.id})`);
 
   console.log('\n✅ Poblado correctamente.');
   process.exit(0);

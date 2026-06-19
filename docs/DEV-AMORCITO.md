@@ -3,18 +3,20 @@
 Proyecto: EcoAndes (React + Vite + Firebase). Práctica 02 Negocios Electrónicos — prototipo CRM
 sobre el panel admin existente.
 
+> **ESTADO: tus 3 módulos COMPLETADOS y mergeados a `master`** (PR #1). ✅
+
 ---
 
 ## Tus módulos
 
-| Módulo | Página | Hook | Colección |
-|--------|--------|------|-----------|
-| Reclamos | `src/pages/admin/Reclamos.jsx` | `src/hooks/useReclamos.js` | `reclamos` |
-| Sugerencias | `src/pages/admin/Sugerencias.jsx` | `src/hooks/useSugerencias.js` | `sugerencias` |
-| Reportes CRM | `src/pages/admin/ReportesCRM.jsx` | (varios) | — |
+| Módulo | Página | Hook | Colección | Estado |
+|--------|--------|------|-----------|--------|
+| Reclamos | `src/pages/admin/Reclamos.jsx` | `src/hooks/useReclamos.js` | `reclamos` | ✅ Hecho |
+| Sugerencias | `src/pages/admin/Sugerencias.jsx` | `src/hooks/useSugerencias.js` | `sugerencias` | ✅ Hecho |
+| Reportes CRM | `src/pages/admin/ReportesCRM.jsx` | (varios) | — | ✅ Hecho (5 reportes) |
 
-**Dependencia:** tus módulos usan los clientes que crea Jhoel (colección `clientes`).
-Empieza por Reclamos y Sugerencias; Reportes va al final (necesita datos en todas las colecciones).
+Los módulos de Jhoel (Clientes, Campañas, Promociones, Dashboard) también están en `master`.
+El CRM funciona de punta a punta.
 
 ---
 
@@ -95,3 +97,11 @@ Los 5 reportes que pide el documento (ya hay imports listos en el archivo):
 { clienteId, clienteName, categoria, texto, status, createdAt }
 ```
 Enums centralizados en `src/data/crm.js`.
+
+---
+
+## Pendiente del equipo (no de código)
+- ⬜ **Datos demo CRM** — `seed.mjs` aún NO puebla clientes/campañas/reclamos/sugerencias.
+  Sin datos, los reportes salen en cero.
+- ⬜ **Cuestionario** — 4 preguntas sobre tiendas virtuales.
+- ⬜ **Informe + capturas** — documento final de la práctica.
