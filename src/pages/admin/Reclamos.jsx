@@ -133,6 +133,7 @@ export default function Reclamos() {
                   value={form.asunto}
                   onChange={(e) => setForm({ ...form, asunto: e.target.value })}
                   required
+                  maxLength={120}
                   placeholder="Ej: Retraso en entrega"
                 />
               </div>
@@ -144,6 +145,7 @@ export default function Reclamos() {
                   value={form.detalle}
                   onChange={(e) => setForm({ ...form, detalle: e.target.value })}
                   required
+                  maxLength={500}
                 />
               </div>
 
@@ -167,6 +169,7 @@ export default function Reclamos() {
                   rows="2"
                   value={form.respuesta}
                   onChange={(e) => setForm({ ...form, respuesta: e.target.value })}
+                  maxLength={500}
                   placeholder="Respuesta dada al cliente (opcional)"
                 />
               </div>

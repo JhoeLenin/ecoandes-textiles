@@ -22,16 +22,16 @@ export default function Contact() {
         <div className="container contact-layout">
           <form className="contact-form" onSubmit={handleSubmit} noValidate>
             <label>Nombre
-              <input type="text" required placeholder="Tu nombre" />
+              <input type="text" required maxLength={100} placeholder="Tu nombre" />
             </label>
             <label>Email
-              <input type="email" required placeholder="correo@ejemplo.com" />
+              <input type="email" required maxLength={120} placeholder="correo@ejemplo.com" />
             </label>
             <label>Asunto
-              <input type="text" required placeholder="¿Sobre qué nos escribes?" />
+              <input type="text" required maxLength={120} placeholder="¿Sobre qué nos escribes?" />
             </label>
             <label>Mensaje
-              <textarea rows="5" required placeholder="Escribe tu mensaje..." />
+              <textarea rows="5" required maxLength={1000} placeholder="Escribe tu mensaje..." />
             </label>
             <button type="submit" className="btn btn-primary">Enviar Mensaje</button>
           </form>

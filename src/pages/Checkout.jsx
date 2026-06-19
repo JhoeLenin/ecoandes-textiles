@@ -137,19 +137,19 @@ export default function Checkout() {
             <h2 className="form-title">Datos de Envío</h2>
             <div className="form-grid">
               <label className="full">Nombre completo
-                <input type="text" name="nombre" required placeholder="Juan Pérez Quispe" />
+                <input type="text" name="nombre" required maxLength={100} placeholder="Juan Pérez Quispe" />
               </label>
               <label>Email
-                <input type="email" name="email" required placeholder="correo@ejemplo.com" />
+                <input type="email" name="email" required maxLength={120} placeholder="correo@ejemplo.com" />
               </label>
               <label>Teléfono
-                <input type="tel" name="telefono" required pattern="[0-9+ ]{7,15}" placeholder="954 123 456" />
+                <input type="tel" name="telefono" required pattern="[0-9+ ]{7,15}" maxLength={15} placeholder="954 123 456" />
               </label>
               <label className="full">Dirección
-                <input type="text" name="direccion" required placeholder="Av. Ejército 123, Yanahuara" />
+                <input type="text" name="direccion" required maxLength={150} placeholder="Av. Ejército 123, Yanahuara" />
               </label>
               <label>Distrito
-                <input type="text" name="distrito" required placeholder="Yanahuara" />
+                <input type="text" name="distrito" required maxLength={60} placeholder="Yanahuara" />
               </label>
               <label>Departamento
                 <select

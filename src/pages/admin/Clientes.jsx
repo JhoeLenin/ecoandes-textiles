@@ -140,6 +140,7 @@ export default function Clientes() {
                   value={form.name}
                   onChange={(e) => setField('name', e.target.value)}
                   required
+                  maxLength={100}
                 />
               </div>
               <div className="form-row">
@@ -184,6 +185,7 @@ export default function Clientes() {
                   type="text"
                   value={form.contactName}
                   onChange={(e) => setField('contactName', e.target.value)}
+                  maxLength={80}
                 />
               </div>
               <div className="form-row">
@@ -193,14 +195,17 @@ export default function Clientes() {
                     type="email"
                     value={form.email}
                     onChange={(e) => setField('email', e.target.value)}
+                    maxLength={120}
                   />
                 </div>
                 <div className="form-group">
                   <label>Teléfono</label>
                   <input
-                    type="text"
+                    type="tel"
                     value={form.phone}
-                    onChange={(e) => setField('phone', e.target.value)}
+                    onChange={(e) => setField('phone', e.target.value.replace(/[^\d+]/g, ''))}
+                    maxLength={15}
+                    inputMode="tel"
                   />
                 </div>
               </div>

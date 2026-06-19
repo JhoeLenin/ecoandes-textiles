@@ -115,6 +115,7 @@ export default function Offers() {
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   required
+                  maxLength={100}
                   placeholder="Ej: Liquidación de invierno"
                 />
               </div>
@@ -134,6 +135,8 @@ export default function Offers() {
                   <label>Valor del descuento *</label>
                   <input
                     type="number"
+                    min="0"
+                    max={form.discountType === 'percent' ? 100 : 99999}
                     step="0.01"
                     value={form.discountValue}
                     onChange={(e) => setForm({ ...form, discountValue: e.target.value })}
@@ -167,6 +170,7 @@ export default function Offers() {
                   <input
                     type="number"
                     min="0"
+                    max="9999999"
                     step="0.01"
                     value={form.budget}
                     onChange={(e) => setForm({ ...form, budget: e.target.value })}
@@ -178,6 +182,7 @@ export default function Offers() {
                   <input
                     type="number"
                     min="0"
+                    max="9999999"
                     step="0.01"
                     value={form.result}
                     onChange={(e) => setForm({ ...form, result: e.target.value })}

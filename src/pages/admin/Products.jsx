@@ -145,6 +145,7 @@ export default function Products() {
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     required
+                    maxLength={120}
                   />
                 </div>
                 <div className="form-group">
@@ -168,6 +169,7 @@ export default function Products() {
                   rows={3}
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  maxLength={1000}
                 />
               </div>
 
@@ -176,6 +178,8 @@ export default function Products() {
                   <label>Precio lista (S/)</label>
                   <input
                     type="number"
+                    min="0"
+                    max="99999"
                     step="0.01"
                     value={form.priceList}
                     onChange={(e) => setForm({ ...form, priceList: e.target.value })}
@@ -185,6 +189,8 @@ export default function Products() {
                   <label>Precio oferta (S/)</label>
                   <input
                     type="number"
+                    min="0"
+                    max="99999"
                     step="0.01"
                     value={form.priceOffer}
                     onChange={(e) => setForm({ ...form, priceOffer: e.target.value })}
@@ -194,6 +200,9 @@ export default function Products() {
                   <label>Stock</label>
                   <input
                     type="number"
+                    min="0"
+                    max="99999"
+                    step="1"
                     value={form.stock}
                     onChange={(e) => setForm({ ...form, stock: e.target.value })}
                   />
@@ -248,12 +257,14 @@ export default function Products() {
                     placeholder="Clave"
                     value={specKey}
                     onChange={(e) => setSpecKey(e.target.value)}
+                    maxLength={40}
                   />
                   <input
                     type="text"
                     placeholder="Valor"
                     value={specVal}
                     onChange={(e) => setSpecVal(e.target.value)}
+                    maxLength={120}
                   />
                   <button type="button" className="btn btn-outline btn-sm" onClick={handleSpecs}>
                     <i className="fa-solid fa-plus" />

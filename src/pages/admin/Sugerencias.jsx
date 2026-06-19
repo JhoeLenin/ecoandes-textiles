@@ -156,6 +156,7 @@ export default function Sugerencias() {
                   value={form.texto}
                   onChange={(e) => setForm({ ...form, texto: e.target.value })}
                   required
+                  maxLength={500}
                 />
               </div>
 

@@ -105,6 +105,7 @@ export default function Campanas() {
                   value={form.name}
                   onChange={(e) => setField('name', e.target.value)}
                   required
+                  maxLength={100}
                 />
               </div>
               <div className="form-row">
@@ -131,6 +132,7 @@ export default function Campanas() {
                   <input
                     type="number"
                     min="0"
+                    max="9999999"
                     step="0.01"
                     value={form.budget}
                     onChange={(e) => setField('budget', e.target.value)}
@@ -142,6 +144,7 @@ export default function Campanas() {
                   <input
                     type="number"
                     min="0"
+                    max="9999999"
                     step="0.01"
                     value={form.result}
                     onChange={(e) => setField('result', e.target.value)}
