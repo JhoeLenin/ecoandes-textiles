@@ -100,9 +100,23 @@ export default function Product() {
 
             <div className="detail-actions">
               <div className="qty-selector">
-                <button className="qty-btn" onClick={() => setQty(Math.max(1, qty - 1))} aria-label="Disminuir">−</button>
+                <button
+                  className="qty-btn"
+                  onClick={() => setQty(Math.max(1, qty - 1))}
+                  disabled={qty <= 1}
+                  aria-label="Disminuir"
+                >
+                  −
+                </button>
                 <span className="qty-value">{qty}</span>
-                <button className="qty-btn" onClick={() => setQty(Math.min(product.stock, qty + 1))} aria-label="Aumentar">+</button>
+                <button
+                  className="qty-btn"
+                  onClick={() => setQty(Math.min(product.stock, qty + 1))}
+                  disabled={qty >= product.stock}
+                  aria-label="Aumentar"
+                >
+                  +
+                </button>
               </div>
               <button
                 className="btn btn-primary btn-lg"

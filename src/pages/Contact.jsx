@@ -1,14 +1,17 @@
+import { useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { STORE } from '../data/products';
-import { useCart } from '../context/CartContext';
+import toast from 'react-hot-toast';
 
 export default function Contact() {
-  const { showToast } = useCart();
+  const [msgLen, setMsgLen] = useState(0);
+  const [sending, setSending] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!e.target.reportValidity()) return;
+    setSending(true);
     const form = e.target;
     try {
       await addDoc(collection(db, 'messages'), {
@@ -22,7 +25,9 @@ export default function Contact() {
       // silent
     }
     form.reset();
-    showToast('¡Mensaje enviado! Te responderemos pronto.');
+    setMsgLen(0);
+    setSending(false);
+    toast.success('¡Mensaje enviado! Te responderemos pronto.');
   };
 
   return (
@@ -36,18 +41,28 @@ export default function Contact() {
         <div className="container contact-layout">
           <form className="contact-form" onSubmit={handleSubmit} noValidate>
             <label>Nombre
-              <input type="text" required maxLength={100} placeholder="Tu nombre" />
+              <input type="text" name="nombre" required maxLength={100} placeholder="Tu nombre" />
             </label>
             <label>Email
-              <input type="email" required maxLength={120} placeholder="correo@ejemplo.com" />
+              <input type="email" name="email" required maxLength={120} placeholder="correo@ejemplo.com" />
             </label>
             <label>Asunto
-              <input type="text" required maxLength={120} placeholder="¿Sobre qué nos escribes?" />
+              <input type="text" name="asunto" required maxLength={120} placeholder="¿Sobre qué nos escribes?" />
             </label>
             <label>Mensaje
-              <textarea rows="5" required maxLength={1000} placeholder="Escribe tu mensaje..." />
+              <textarea
+                name="mensaje"
+                rows="5"
+                required
+                maxLength={1000}
+                placeholder="Escribe tu mensaje..."
+                onChange={(e) => setMsgLen(e.target.value.length)}
+              />
+              <span className="char-count">{msgLen}/1000</span>
             </label>
-            <button type="submit" className="btn btn-primary">Enviar Mensaje</button>
+            <button type="submit" className="btn btn-primary" disabled={sending}>
+              {sending ? 'Enviando...' : 'Enviar Mensaje'}
+            </button>
           </form>
 
           <div>

@@ -9,6 +9,7 @@ export default function Shop() {
   const [sort, setSort] = useState('default');
   const [search, setSearch] = useState('');
   const [genero, setGenero] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
 
   const list = useMemo(() => {
     let l = [...PRODUCTS];
@@ -60,7 +61,11 @@ export default function Shop() {
 
       <section className="section">
         <div className="container shop-layout">
-          <aside className="shop-sidebar">
+          <button className="filter-toggle-btn" onClick={() => setShowFilters(!showFilters)}>
+            <i className={`fa-solid ${showFilters ? 'fa-xmark' : 'fa-filter'}`} />
+            {showFilters ? 'Ocultar Filtros' : 'Filtros'}
+          </button>
+          <aside className={`shop-sidebar ${showFilters ? 'open' : ''}`}>
             <h3>Sección</h3>
             {GENEROS_TIENDA.map((g) => (
               <label key={g.value} className="filter-option">

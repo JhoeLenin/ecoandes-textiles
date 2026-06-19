@@ -48,9 +48,9 @@ export default function About() {
 
           <h2>Nuestro Trabajo</h2>
           <div className="gallery-grid">
-            <img src="/img/nosotros-1.jpg" alt="Tejido en telar tradicional" />
-            <img src="/img/nosotros-2.jpg" alt="Artesana trabajando" />
-            <img src="/img/nosotros-3.jpg" alt="Fibras de lana natural" />
+            <img src="/img/nosotros-1.jpg" alt="Tejido en telar tradicional" loading="lazy" />
+            <img src="/img/nosotros-2.jpg" alt="Artesana trabajando" loading="lazy" />
+            <img src="/img/nosotros-3.jpg" alt="Fibras de lana natural" loading="lazy" />
           </div>
         </div>
       </section>

@@ -42,10 +42,12 @@ export default function Home() {
   const featured = PRODUCTS.filter((p) => p.featured).slice(0, 6);
   const { showToast } = useCart();
   const [email, setEmail] = useState('');
+  const [sending, setSending] = useState(false);
 
   const handleNewsletter = async (e) => {
     e.preventDefault();
     if (!e.target.reportValidity()) return;
+    setSending(true);
     try {
       await addDoc(collection(db, 'newsletter'), {
         email,
@@ -55,6 +57,7 @@ export default function Home() {
       // silent
     }
     setEmail('');
+    setSending(false);
     showToast('¡Gracias por suscribirte! Recibirás nuestras novedades.');
   };
 
@@ -178,7 +181,9 @@ export default function Home() {
               onChange={(e) => setEmail(e.target.value)}
               aria-label="Correo electrónico"
             />
-            <button type="submit" className="btn btn-primary">Suscribirme</button>
+            <button type="submit" className="btn btn-primary" disabled={sending}>
+              {sending ? 'Enviando...' : 'Suscribirme'}
+            </button>
           </form>
         </div>
       </section>

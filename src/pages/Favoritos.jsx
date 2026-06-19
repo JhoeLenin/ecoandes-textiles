@@ -1,9 +1,10 @@
+import ProductCard from '../components/ProductCard';
 import { Link } from 'react-router-dom';
 import { useFavorites } from '../hooks/useFavorites';
-import { getProduct, formatPrice, productImg } from '../data/products';
+import { getProduct } from '../data/products';
 
 export default function Favoritos() {
-  const { favorites, toggleFavorite, isFavorite } = useFavorites();
+  const { favorites } = useFavorites();
 
   const products = favorites.map((id) => getProduct(id)).filter(Boolean);
 
@@ -25,28 +26,7 @@ export default function Favoritos() {
           ) : (
             <div className="products-grid">
               {products.map((p) => (
-                <article className="product-card" key={p.id}>
-                  <Link to={`/producto/${p.id}`} className="card-img-wrap">
-                    <img src={productImg(p.id, 1)} alt={p.name} loading="lazy" />
-                  </Link>
-                  <button
-                    className={`wishlist-btn liked`}
-                    aria-label="Quitar de favoritos"
-                    onClick={() => toggleFavorite(p.id)}
-                  >
-                    <i className="fa-solid fa-heart" />
-                  </button>
-                  <div className="card-body">
-                    <span className="card-category">{p.category}</span>
-                    <Link to={`/producto/${p.id}`}>
-                      <h3 className="card-title">{p.name}</h3>
-                    </Link>
-                    <div className="card-prices">
-                      <span className="price-offer">{formatPrice(p.priceOffer)}</span>
-                      <span className="price-list">{formatPrice(p.priceList)}</span>
-                    </div>
-                  </div>
-                </article>
+                <ProductCard key={p.id} product={p} />
               ))}
             </div>
           )}
