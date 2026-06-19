@@ -6,3 +6,5 @@ dist/
 *.log
 
 .vercel
+functions/node_modules/
+functions/.env
