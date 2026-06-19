@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { useProducts } from '../../hooks/useProducts';
 import { useCategories } from '../../hooks/useCategories';
+import { GENERO_PRODUCTO } from '../../data/crm';
 import toast from 'react-hot-toast';
+
+const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
 const emptyProduct = {
   name: '',
   category: '',
+  gender: 'unisex',
   description: '',
   specs: {},
   priceList: '',
@@ -44,6 +48,7 @@ export default function Products() {
     setForm({
       name: p.name || '',
       category: p.category || '',
+      gender: p.gender || 'unisex',
       description: p.description || '',
       specs: p.specs || {},
       priceList: p.priceList || '',
@@ -161,6 +166,18 @@ export default function Products() {
                     ))}
                   </select>
                 </div>
+              </div>
+
+              <div className="form-group">
+                <label>Género</label>
+                <select
+                  value={form.gender}
+                  onChange={(e) => setForm({ ...form, gender: e.target.value })}
+                >
+                  {GENERO_PRODUCTO.map((g) => (
+                    <option key={g} value={g}>{cap(g)}</option>
+                  ))}
+                </select>
               </div>
 
               <div className="form-group">

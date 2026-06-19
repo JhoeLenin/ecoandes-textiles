@@ -8,10 +8,15 @@ export default function Shop() {
   const category = params.get('cat') || '';
   const [sort, setSort] = useState('default');
   const [search, setSearch] = useState('');
+  const [genero, setGenero] = useState('');
 
   const list = useMemo(() => {
     let l = [...PRODUCTS];
     if (category) l = l.filter((p) => p.category === category);
+    if (genero) {
+      // Mujer/Varón incluyen también productos unisex.
+      l = l.filter((p) => p.gender === genero || p.gender === 'unisex');
+    }
     if (search) {
       const q = search.toLowerCase();
       l = l.filter((p) => p.name.toLowerCase().includes(q));
@@ -20,7 +25,7 @@ export default function Shop() {
     if (sort === 'price-desc') l.sort((a, b) => b.priceOffer - a.priceOffer);
     if (sort === 'name-asc') l.sort((a, b) => a.name.localeCompare(b.name, 'es'));
     return l;
-  }, [category, sort, search]);
+  }, [category, sort, search, genero]);
 
   const setCategory = (id) => {
     if (id) setParams({ cat: id });
@@ -31,7 +36,14 @@ export default function Shop() {
     setParams({});
     setSort('default');
     setSearch('');
+    setGenero('');
   };
+
+  const GENEROS_TIENDA = [
+    { value: '', label: 'Todos' },
+    { value: 'mujer', label: 'Mujeres' },
+    { value: 'varon', label: 'Varones' },
+  ];
 
   return (
     <>
@@ -44,6 +56,18 @@ export default function Shop() {
       <section className="section">
         <div className="container shop-layout">
           <aside className="shop-sidebar">
+            <h3>Sección</h3>
+            {GENEROS_TIENDA.map((g) => (
+              <label key={g.value} className="filter-option">
+                <input
+                  type="radio"
+                  name="genero"
+                  checked={genero === g.value}
+                  onChange={() => setGenero(g.value)}
+                />{' '}
+                {g.label}
+              </label>
+            ))}
             <h3>Categorías</h3>
             {CATEGORIES.map((c) => (
               <label key={c.id} className="filter-option">

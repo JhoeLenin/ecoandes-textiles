@@ -1,5 +1,10 @@
 // Enums compartidos CRM. Usar en formularios y reportes.
 
+export const GENEROS = ['femenino', 'masculino', 'otro'];
+
+// Clasificación de productos por género (tienda).
+export const GENERO_PRODUCTO = ['mujer', 'varon', 'unisex'];
+
 export const TIPOS_CLIENTE = [
   'agente',
   'beneficiario',

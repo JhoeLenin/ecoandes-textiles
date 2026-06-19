@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useClientes } from '../../hooks/useClientes';
-import { TIPOS_CLIENTE, SECTORES, TIENDAS, ESTADO_CLIENTE } from '../../data/crm';
+import { TIPOS_CLIENTE, SECTORES, TIENDAS, ESTADO_CLIENTE, GENEROS } from '../../data/crm';
 import toast from 'react-hot-toast';
 
 const EMPTY = {
@@ -9,6 +9,7 @@ const EMPTY = {
   sector: 'comercial',
   tienda: 'Cayma',
   contactName: '',
+  genero: 'otro',
   email: '',
   phone: '',
   status: 'activo',
@@ -59,6 +60,7 @@ export default function Clientes() {
         sector: form.sector,
         tienda: form.tienda,
         contactName: form.contactName,
+        genero: form.genero,
         email: form.email,
         phone: form.phone,
         status: form.status,
@@ -179,14 +181,24 @@ export default function Clientes() {
                   </select>
                 </div>
               </div>
-              <div className="form-group">
-                <label>Persona de contacto</label>
-                <input
-                  type="text"
-                  value={form.contactName}
-                  onChange={(e) => setField('contactName', e.target.value)}
-                  maxLength={80}
-                />
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Persona de contacto</label>
+                  <input
+                    type="text"
+                    value={form.contactName}
+                    onChange={(e) => setField('contactName', e.target.value)}
+                    maxLength={80}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Género</label>
+                  <select value={form.genero} onChange={(e) => setField('genero', e.target.value)}>
+                    {GENEROS.map((g) => (
+                      <option key={g} value={g}>{cap(g)}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
@@ -244,6 +256,7 @@ export default function Clientes() {
                 <td>{c.tienda}</td>
                 <td>
                   {c.contactName || '—'}
+                  {c.genero && <div className="cell-sub">{cap(c.genero)}</div>}
                   {c.email && <div className="cell-sub">{c.email}</div>}
                   {c.phone && <div className="cell-sub">{c.phone}</div>}
                 </td>

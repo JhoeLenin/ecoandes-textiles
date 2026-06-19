@@ -11,6 +11,7 @@ export const PRODUCTS = [
     id: 'PROD-01',
     name: 'Chompa de Alpaca (cuello alto)',
     category: 'CAT-01',
+    gender: 'unisex',
     description: 'Tejido de lana de alpaca con mezcla acrílica, cuello alto, colores gris y beige.',
     specs: {
       'Composición': '80% alpaca, 20% acrílico',
@@ -27,6 +28,7 @@ export const PRODUCTS = [
     id: 'PROD-02',
     name: 'Bufanda Multicolor (180×30)',
     category: 'CAT-01',
+    gender: 'unisex',
     description: 'Franjas horizontales tradicionales en rojo, naranja, amarillo y verde.',
     specs: {
       'Composición': '100% acrílico hipoalergénico',
@@ -42,6 +44,7 @@ export const PRODUCTS = [
     id: 'PROD-03',
     name: 'Manta Totoras (150×200)',
     category: 'CAT-02',
+    gender: 'unisex',
     description: 'Manta decorativa con patrones inspirados en totora, tonos tierra.',
     specs: {
       'Composición': '100% algodón',
@@ -57,6 +60,7 @@ export const PRODUCTS = [
     id: 'PROD-04',
     name: 'Cojín Aymara (40×40 bordado)',
     category: 'CAT-02',
+    gender: 'unisex',
     description: 'Cojín cuadrado con bordado manual de símbolos andinos aymara.',
     specs: {
       'Dimensiones': '40 cm × 40 cm',
@@ -73,6 +77,7 @@ export const PRODUCTS = [
     id: 'PROD-05',
     name: 'Mochila Wayra (35×25, yute)',
     category: 'CAT-03',
+    gender: 'unisex',
     description: 'Mochila pequeña de yute natural con cierre cremallera y tiradores ajustables.',
     specs: {
       'Dimensiones': '35 cm × 25 cm',
@@ -88,6 +93,7 @@ export const PRODUCTS = [
     id: 'PROD-06',
     name: 'Bolso Chumpi (bandolera)',
     category: 'CAT-03',
+    gender: 'mujer',
     description: 'Bandolera con correa tejida andina, cierre magnético y bolsillo interior.',
     specs: {
       'Dimensiones': '28 cm × 18 cm',
@@ -103,6 +109,7 @@ export const PRODUCTS = [
     id: 'PROD-07',
     name: 'Chompa Niños Alpaca (tallas 4-10)',
     category: 'CAT-01',
+    gender: 'unisex',
     description: 'Motivos geométricos andinos tradicionales, colores blanco, rosa y beige.',
     specs: {
       'Composición': '100% alpaca',
@@ -118,6 +125,7 @@ export const PRODUCTS = [
     id: 'PROD-08',
     name: 'Gorro Andino Chullo (orejeras)',
     category: 'CAT-01',
+    gender: 'varon',
     description: 'Gorro tradicional con orejeras y cordón trenzado, multicolor.',
     specs: {
       'Composición': '100% alpaca',
@@ -133,6 +141,7 @@ export const PRODUCTS = [
     id: 'PROD-09',
     name: 'Alfombra Trenzada (200×300)',
     category: 'CAT-02',
+    gender: 'unisex',
     description: 'Alfombra grande tejida a mano con grecas tradicionales.',
     specs: {
       'Composición': '100% lana de oveja',
@@ -149,6 +158,7 @@ export const PRODUCTS = [
     id: 'PROD-10',
     name: 'Camino de Mesa (35×180)',
     category: 'CAT-02',
+    gender: 'unisex',
     description: 'Bordado andino en algodón, motivos tradicionales, lavable.',
     specs: {
       'Composición': '100% algodón',
@@ -164,6 +174,7 @@ export const PRODUCTS = [
     id: 'PROD-11',
     name: 'Morral Telar (40×35, cordón)',
     category: 'CAT-03',
+    gender: 'varon',
     description: 'Morral grande tejido en telar tradicional con cierre de cordón.',
     specs: {
       'Dimensiones': '40 cm × 35 cm',
@@ -179,6 +190,7 @@ export const PRODUCTS = [
     id: 'PROD-12',
     name: 'Riñonera Textil (20×12)',
     category: 'CAT-03',
+    gender: 'mujer',
     description: 'Riñonera pequeña tejida con cierre zipper y correa ajustable.',
     specs: {
       'Dimensiones': '20 cm × 12 cm',
