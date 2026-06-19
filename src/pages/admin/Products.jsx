@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useProducts } from '../../hooks/useProducts';
 import { useCategories } from '../../hooks/useCategories';
 import { GENERO_PRODUCTO } from '../../data/crm';
@@ -27,6 +27,10 @@ export default function Products() {
   const [form, setForm] = useState(emptyProduct);
   const [images, setImages] = useState([]);
   const [keptImages, setKeptImages] = useState([]);
+
+  // URLs de preview creadas una vez por archivo y revocadas al cambiar/desmontar.
+  const imagePreviews = useMemo(() => images.map((f) => URL.createObjectURL(f)), [images]);
+  useEffect(() => () => imagePreviews.forEach((url) => URL.revokeObjectURL(url)), [imagePreviews]);
   const [specKey, setSpecKey] = useState('');
   const [specVal, setSpecVal] = useState('');
   const [saving, setSaving] = useState(false);
@@ -258,7 +262,7 @@ export default function Products() {
                   ))}
                   {images.map((f, i) => (
                     <div key={i} className="image-preview-item">
-                      <img src={URL.createObjectURL(f)} alt="" />
+                      <img src={imagePreviews[i]} alt="" />
                       <button type="button" onClick={() => setImages(images.filter((_, j) => j !== i))}>
                         <i className="fa-solid fa-xmark" />
                       </button>
