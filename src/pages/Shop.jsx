@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
+import { ProductGridSkeleton } from '../components/Skeleton';
 import { useCatalog } from '../context/CatalogContext';
 import { useVendedor } from '../hooks/useVendedores';
 
@@ -62,7 +63,22 @@ export default function Shop() {
     { value: 'varon', label: 'Varones' },
   ];
 
-  if (loading) return <div className="admin-loading">Cargando productos...</div>;
+  if (loading) {
+    return (
+      <>
+        <section className="page-hero">
+          <span className="section-eyebrow">Catálogo completo</span>
+          <h1>Nuestra Tienda</h1>
+          <p>Textiles artesanales arequipeños hechos a mano</p>
+        </section>
+        <section className="section">
+          <div className="container">
+            <ProductGridSkeleton count={8} />
+          </div>
+        </section>
+      </>
+    );
+  }
 
   return (
     <>

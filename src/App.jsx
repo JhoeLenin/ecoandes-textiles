@@ -78,7 +78,23 @@ export default function App() {
       <AuthProvider>
         <CatalogProvider>
           <CartProvider>
-            <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                duration: 3000,
+                style: {
+                  background: '#FAF6F0',
+                  color: '#2B2420',
+                  border: '1px solid #E3D9CB',
+                  borderRadius: '12px',
+                  boxShadow: '0 8px 30px rgba(43, 36, 32, 0.16)',
+                  fontSize: '0.9rem',
+                  fontWeight: 500,
+                },
+                success: { iconTheme: { primary: '#46603C', secondary: '#FAF6F0' } },
+                error: { iconTheme: { primary: '#C0653B', secondary: '#FAF6F0' } },
+              }}
+            />
             <ScrollToTop />
             <Routes>
               <Route path="/login" element={<Login />} />

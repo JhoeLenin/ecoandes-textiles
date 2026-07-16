@@ -3000,12 +3000,121 @@ textarea:focus {
 }
 
 /* Reduced motion */
+/* ===== Pulido UX/UI ===== */
+
+/* Botones: feedback de presión + reflejo sutil */
+.btn:active:not(:disabled) {
+  transform: translateY(1px) scale(0.99);
+}
+
+.btn-outline:active:not(:disabled) {
+  transform: translateY(1px) scale(0.99);
+}
+
+/* Foco accesible en tarjetas de producto (navegación por teclado) */
+.product-card:focus-within {
+  box-shadow: var(--shadow-lg), 0 0 0 2px var(--terracotta);
+  transform: translateY(-4px);
+}
+
+/* Header: elevación al hacer scroll */
+.site-header.scrolled {
+  box-shadow: 0 6px 24px rgba(43, 36, 32, 0.10);
+  background: rgba(250, 246, 240, 0.95);
+}
+
+.site-header {
+  transition: box-shadow var(--transition), background var(--transition);
+}
+
+/* Realce de precio de oferta */
+.card-prices .price-offer,
+.detail-prices .price-offer {
+  color: var(--clay);
+  font-weight: 700;
+}
+
+/* Enlaces de nav con subrayado animado */
+.main-nav a {
+  position: relative;
+}
+
+@media (min-width: 861px) {
+  .main-nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 2px;
+    background: var(--terracotta);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform var(--transition);
+  }
+  .main-nav a:hover::after,
+  .main-nav a.active::after {
+    transform: scaleX(1);
+  }
+}
+
+/* ===== Skeletons (carga percibida) ===== */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--sand);
+  border-radius: var(--radius-sm);
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+  animation: skeleton-shimmer 1.4s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  100% { transform: translateX(100%); }
+}
+
+.skeleton-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.skeleton-img { height: 230px; border-radius: 0; }
+
+.skeleton-body {
+  padding: 1rem 1.1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.skeleton-line { height: 12px; }
+.skeleton-line.sm { width: 40%; height: 10px; }
+.skeleton-line.md { width: 75%; }
+.skeleton-line.lg { width: 100%; height: 16px; }
+.skeleton-line.price { width: 50%; height: 20px; margin-top: 0.2rem; }
+.skeleton-btn { height: 42px; border-radius: 999px; margin-top: 0.4rem; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
   html { scroll-behavior: auto; }
+  .skeleton::after { animation: none; }
 }
 
 /* Cart mobile */
