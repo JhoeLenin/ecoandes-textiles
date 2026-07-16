@@ -23,6 +23,7 @@ const navGroups = [
     links: [
       { to: '/admin/pedidos', icon: 'fa-receipt', label: 'Pedidos' },
       { to: '/admin/usuarios', icon: 'fa-users', label: 'Usuarios' },
+      { to: '/admin/vendedores', icon: 'fa-store', label: 'Vendedores' },
     ],
   },
   {

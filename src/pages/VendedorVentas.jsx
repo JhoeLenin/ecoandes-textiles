@@ -1,5 +1,6 @@
 import { useAuth } from '../context/AuthContext';
 import { useSellerSales } from '../hooks/useSellerSales';
+import { useMarketplaceConfig } from '../hooks/useMarketplaceConfig';
 import { formatPrice } from '../context/CatalogContext';
 
 const fecha = (iso) => {
@@ -10,8 +11,12 @@ const fecha = (iso) => {
 export default function VendedorVentas() {
   const { user } = useAuth();
   const { sales, loading, totalRevenue, totalUnits, orderCount } = useSellerSales(user?.uid);
+  const { commissionRate } = useMarketplaceConfig();
 
   if (loading) return <div className="admin-loading">Cargando ventas...</div>;
+
+  const totalComision = totalRevenue * commissionRate;
+  const totalNeto = totalRevenue - totalComision;
 
   return (
     <div>
@@ -32,12 +37,16 @@ export default function VendedorVentas() {
           <div className="stat-icon" style={{ background: 'var(--gold)' }}><i className="fa-solid fa-sack-dollar" /></div>
           <div className="stat-info"><span className="stat-value">{formatPrice(totalRevenue)}</span><span className="stat-label">Ingresos (bruto)</span></div>
         </div>
+        <div className="stat-card">
+          <div className="stat-icon" style={{ background: 'var(--clay)' }}><i className="fa-solid fa-hand-holding-dollar" /></div>
+          <div className="stat-info"><span className="stat-value">{formatPrice(totalNeto)}</span><span className="stat-label">Neto (−{(commissionRate * 100).toFixed(0)}% comisión)</span></div>
+        </div>
       </div>
 
       <div className="table-wrap">
         <table className="admin-table">
           <thead>
-            <tr><th>Fecha</th><th>Cliente</th><th>Mis productos</th><th>Unid.</th><th>Subtotal</th><th>Estado</th></tr>
+            <tr><th>Fecha</th><th>Cliente</th><th>Mis productos</th><th>Unid.</th><th>Bruto</th><th>Neto</th><th>Estado</th></tr>
           </thead>
           <tbody>
             {sales.map((o) => (
@@ -47,6 +56,7 @@ export default function VendedorVentas() {
                 <td>{o.sellerItems.map((i) => `${i.name} ×${i.qty}`).join(', ')}</td>
                 <td>{o.sellerUnits}</td>
                 <td>{formatPrice(o.sellerTotal)}</td>
+                <td>{formatPrice(o.sellerTotal * (1 - commissionRate))}</td>
                 <td><span className="badge badge-success">{o.status || '—'}</span></td>
               </tr>
             ))}

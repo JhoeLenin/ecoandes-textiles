@@ -23,6 +23,7 @@ import Categories from './pages/admin/Categories';
 import Offers from './pages/admin/Offers';
 import Orders from './pages/admin/Orders';
 import Users from './pages/admin/Users';
+import VendedoresAdmin from './pages/admin/Vendedores';
 import Clientes from './pages/admin/Clientes';
 import Campanas from './pages/admin/Campanas';
 import Reclamos from './pages/admin/Reclamos';
@@ -98,6 +99,7 @@ export default function App() {
                 <Route path="ofertas" element={<Offers />} />
                 <Route path="pedidos" element={<Orders />} />
                 <Route path="usuarios" element={<Users />} />
+                <Route path="vendedores" element={<VendedoresAdmin />} />
                 <Route path="clientes" element={<Clientes />} />
                 <Route path="campanas" element={<Campanas />} />
                 <Route path="reclamos" element={<Reclamos />} />
