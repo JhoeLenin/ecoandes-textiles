@@ -10,7 +10,7 @@ export default function Cuenta() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
-  const { login, register, user, isAdmin, logout } = useAuth();
+  const { login, register, user, isAdmin, isSeller, logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,6 +36,15 @@ export default function Cuenta() {
             <Link to="/perfil" className="btn btn-outline btn-block">
               <i className="fa-solid fa-gear" /> Mi Perfil
             </Link>
+            {isSeller ? (
+              <Link to="/vendedor" className="btn btn-outline btn-block">
+                <i className="fa-solid fa-store" /> Panel de Vendedor
+              </Link>
+            ) : (
+              <Link to="/vendedor/registro" className="btn btn-outline btn-block">
+                <i className="fa-solid fa-store" /> Vende en EcoAndes
+              </Link>
+            )}
             <button
               className="btn btn-outline btn-block"
               onClick={async () => { await logout(); toast.success('Sesión cerrada'); }}
