@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ProductCard, { Stars } from '../components/ProductCard';
 import { useCatalog, productImg, discountPct, formatPrice } from '../context/CatalogContext';
+import { useVendedor } from '../hooks/useVendedores';
 import { useCart } from '../context/CartContext';
 
 export default function Product() {
   const { id } = useParams();
   const { getProduct, getCategory, products: PRODUCTS, loading } = useCatalog();
   const product = getProduct(id);
+  const { vendedor } = useVendedor(product?.sellerId);
   const { addToCart } = useCart();
   const [qty, setQty] = useState(1);
   const [mainImg, setMainImg] = useState(1);
@@ -76,6 +78,12 @@ export default function Product() {
               <span className="rating-count">4.6 — opiniones verificadas</span>
             </div>
             <p className="detail-sku">SKU: {product.id}</p>
+            {vendedor && (
+              <p className="detail-seller">
+                <i className="fa-solid fa-store" /> Vendido por{' '}
+                <Link to={`/tienda/vendedor/${product.sellerId}`}>{vendedor.storeName}</Link>
+              </p>
+            )}
             <p>{product.description}</p>
 
             <div className="detail-prices">

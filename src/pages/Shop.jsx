@@ -1,12 +1,15 @@
 import { useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { useCatalog } from '../context/CatalogContext';
+import { useVendedor } from '../hooks/useVendedores';
 
 export default function Shop() {
   const { products: PRODUCTS, categories: CATEGORIES, loading } = useCatalog();
   const [params, setParams] = useSearchParams();
   const category = params.get('cat') || '';
+  const vendedorId = params.get('vendedor') || '';
+  const { vendedor } = useVendedor(vendedorId);
   const [sort, setSort] = useState('default');
   const [search, setSearch] = useState('');
   const [genero, setGenero] = useState('');
@@ -14,6 +17,7 @@ export default function Shop() {
 
   const list = useMemo(() => {
     let l = [...PRODUCTS];
+    if (vendedorId) l = l.filter((p) => p.sellerId === vendedorId);
     if (category) l = l.filter((p) => p.category === category);
     if (genero) {
       // Mujer/Varón incluyen también productos unisex.
@@ -32,7 +36,13 @@ export default function Shop() {
     if (sort === 'price-desc') l.sort((a, b) => b.priceOffer - a.priceOffer);
     if (sort === 'name-asc') l.sort((a, b) => a.name.localeCompare(b.name, 'es'));
     return l;
-  }, [category, sort, search, genero]);
+  }, [category, sort, search, genero, vendedorId]);
+
+  const clearVendedor = () => {
+    const next = new URLSearchParams(params);
+    next.delete('vendedor');
+    setParams(next);
+  };
 
   const setCategory = (id) => {
     if (id) setParams({ cat: id });
@@ -99,8 +109,13 @@ export default function Shop() {
           </aside>
 
           <div>
-            {(category || search || genero) && (
+            {(category || search || genero || vendedorId) && (
               <div className="active-filters">
+                {vendedorId && (
+                  <button className="filter-chip" onClick={clearVendedor}>
+                    <i className="fa-solid fa-store" /> {vendedor?.storeName || 'Tienda'} <i className="fa-solid fa-xmark" />
+                  </button>
+                )}
                 {genero && (
                   <button className="filter-chip" onClick={() => setGenero('')}>
                     {GENEROS_TIENDA.find((g) => g.value === genero)?.label} <i className="fa-solid fa-xmark" />

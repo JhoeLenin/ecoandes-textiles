@@ -3754,6 +3754,23 @@ textarea:focus {
   .bar-value { display: none; }
 }
 
+/* ===== Marketplace: vendedor en detalle ===== */
+.detail-seller {
+  font-size: 0.9rem;
+  color: var(--ink-soft, #6b6257);
+  margin: 0.25rem 0 0.5rem;
+}
+
+.detail-seller a {
+  color: var(--terracotta, #b5651d);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.detail-seller a:hover {
+  text-decoration: underline;
+}
+
 /* ===== Panel de vendedor ===== */
 .seller-subnav {
   display: flex;

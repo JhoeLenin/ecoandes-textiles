@@ -8,6 +8,7 @@ import Footer from './components/Footer';
 import AdminLayout from './components/AdminLayout';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
+import TiendaVendedor from './pages/TiendaVendedor';
 import Product from './pages/Product';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
@@ -55,6 +56,7 @@ function PublicLayout() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/tienda" element={<Shop />} />
+          <Route path="/tienda/vendedor/:id" element={<TiendaVendedor />} />
           <Route path="/producto/:id" element={<Product />} />
           <Route path="/carrito" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
