@@ -32,8 +32,11 @@ import Cuenta from './pages/Cuenta';
 import MisPedidos from './pages/MisPedidos';
 import Perfil from './pages/Perfil';
 import Favoritos from './pages/Favoritos';
+import VendedorLayout from './components/VendedorLayout';
 import VendedorRegistro from './pages/VendedorRegistro';
 import VendedorPanel from './pages/VendedorPanel';
+import VendedorProductos from './pages/VendedorProductos';
+import VendedorVentas from './pages/VendedorVentas';
 import { Toaster } from 'react-hot-toast';
 
 function ScrollToTop() {
@@ -81,7 +84,11 @@ export default function App() {
             <Route path="/perfil" element={<Perfil />} />
             <Route path="/favoritos" element={<Favoritos />} />
             <Route path="/vendedor/registro" element={<VendedorRegistro />} />
-            <Route path="/vendedor" element={<VendedorPanel />} />
+            <Route path="/vendedor" element={<VendedorLayout />}>
+              <Route index element={<VendedorPanel />} />
+              <Route path="productos" element={<VendedorProductos />} />
+              <Route path="ventas" element={<VendedorVentas />} />
+            </Route>
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<Dashboard />} />
                 <Route path="productos" element={<Products />} />

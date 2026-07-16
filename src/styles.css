@@ -3755,6 +3755,30 @@ textarea:focus {
 }
 
 /* ===== Panel de vendedor ===== */
+.seller-subnav {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--line, #e5ddd2);
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.seller-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem;
+  color: var(--ink-soft, #6b6257);
+  font-weight: 600;
+  border-bottom: 2px solid transparent;
+  text-decoration: none;
+}
+
+.seller-tab.active {
+  color: var(--terracotta, #b5651d);
+  border-bottom-color: var(--terracotta, #b5651d);
+}
+
 .seller-store-head {
   display: flex;
   align-items: center;

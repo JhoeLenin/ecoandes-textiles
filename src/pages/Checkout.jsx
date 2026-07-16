@@ -88,6 +88,7 @@ export default function Checkout() {
           name: p?.name || i.id,
           price: p?.priceOffer || 0,
           qty: i.qty,
+          sellerId: p?.sellerId || null,
         };
       });
 
@@ -155,6 +156,7 @@ export default function Checkout() {
           name: p?.name || i.id,
           price: p?.priceOffer || 0,
           qty: i.qty,
+          sellerId: p?.sellerId || null,
         };
       });
 
