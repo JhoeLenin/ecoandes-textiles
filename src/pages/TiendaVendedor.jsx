@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
+import { ProductGridSkeleton } from '../components/Skeleton';
 import { useVendedor } from '../hooks/useVendedores';
 import { useCatalog } from '../context/CatalogContext';
 
@@ -9,7 +10,15 @@ export default function TiendaVendedor() {
   const { vendedor, loading: loadingVend } = useVendedor(id);
   const { products, loading: loadingProd } = useCatalog();
 
-  if (loadingVend || loadingProd) return <div className="admin-loading">Cargando tienda...</div>;
+  if (loadingVend || loadingProd) {
+    return (
+      <section className="section">
+        <div className="container">
+          <ProductGridSkeleton count={4} />
+        </div>
+      </section>
+    );
+  }
 
   if (!vendedor) {
     return (

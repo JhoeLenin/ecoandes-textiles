@@ -3108,6 +3108,55 @@ textarea:focus {
 .skeleton-line.price { width: 50%; height: 20px; margin-top: 0.2rem; }
 .skeleton-btn { height: 42px; border-radius: 999px; margin-top: 0.4rem; }
 
+.skeleton-detail-main { height: 420px; border-radius: var(--radius); }
+.skeleton-detail-thumb { height: 84px; width: 84px; }
+
+/* ===== Entrada escalonada de tarjetas ===== */
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.products-grid > * {
+  animation: card-in 0.45s cubic-bezier(0.25, 0.8, 0.35, 1) backwards;
+}
+
+.products-grid > *:nth-child(1) { animation-delay: 0.02s; }
+.products-grid > *:nth-child(2) { animation-delay: 0.07s; }
+.products-grid > *:nth-child(3) { animation-delay: 0.12s; }
+.products-grid > *:nth-child(4) { animation-delay: 0.17s; }
+.products-grid > *:nth-child(5) { animation-delay: 0.22s; }
+.products-grid > *:nth-child(6) { animation-delay: 0.27s; }
+.products-grid > *:nth-child(7) { animation-delay: 0.32s; }
+.products-grid > *:nth-child(8) { animation-delay: 0.37s; }
+
+/* ===== Chip de vendedor en tarjeta ===== */
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.card-seller {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--sage);
+  max-width: 55%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-seller:hover {
+  color: var(--forest);
+  text-decoration: underline;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

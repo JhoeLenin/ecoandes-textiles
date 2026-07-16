@@ -1,12 +1,14 @@
 import { createContext, useContext, useMemo } from 'react';
 import { useProducts } from '../hooks/useProducts';
 import { useCategories } from '../hooks/useCategories';
+import { useVendedores } from '../hooks/useVendedores';
 
 const CatalogContext = createContext(null);
 
 export function CatalogProvider({ children }) {
   const { products, loading: loadingProducts } = useProducts();
   const { categories, loading: loadingCategories } = useCategories();
+  const { vendedores } = useVendedores();
 
   const loading = loadingProducts || loadingCategories;
 
@@ -20,13 +22,20 @@ export function CatalogProvider({ children }) {
     return (id) => map.get(id) || null;
   }, [categories]);
 
+  const getVendedor = useMemo(() => {
+    const map = new Map(vendedores.map((v) => [v.id, v]));
+    return (id) => map.get(id) || null;
+  }, [vendedores]);
+
   const value = useMemo(() => ({
     products,
     categories,
+    vendedores,
     loading,
     getProduct,
     getCategory,
-  }), [products, categories, loading, getProduct, getCategory]);
+    getVendedor,
+  }), [products, categories, vendedores, loading, getProduct, getCategory, getVendedor]);
 
   return (
     <CatalogContext.Provider value={value}>

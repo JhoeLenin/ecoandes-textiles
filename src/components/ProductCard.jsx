@@ -28,7 +28,7 @@ export function Stars({ rating }) {
 
 export default function ProductCard({ product: p }) {
   const { addToCart } = useCart();
-  const { getCategory } = useCatalog();
+  const { getCategory, getVendedor } = useCatalog();
   const { isFavorite, toggleFavorite } = useFavorites();
   const gate = useAuthGate();
   const { rating, reviews } = ratingFor(p.id);
@@ -36,6 +36,7 @@ export default function ProductCard({ product: p }) {
   const liked = isFavorite(p.id);
   const [justAdded, setJustAdded] = useState(false);
   const cat = getCategory(p.category);
+  const vend = p.sellerId ? getVendedor(p.sellerId) : null;
 
   const handleAdd = () => {
     gate(() => {
@@ -70,7 +71,14 @@ export default function ProductCard({ product: p }) {
       </button>
 
       <div className="card-body">
-        <span className="card-category">{cat?.name || 'Sin categoría'}</span>
+        <div className="card-meta">
+          <span className="card-category">{cat?.name || 'Sin categoría'}</span>
+          {vend && (
+            <Link to={`/tienda/vendedor/${p.sellerId}`} className="card-seller" title={`Tienda: ${vend.storeName}`}>
+              <i className="fa-solid fa-store" /> {vend.storeName}
+            </Link>
+          )}
+        </div>
         <h3>
           <Link to={`/producto/${p.id}`}>{p.name}</Link>
         </h3>

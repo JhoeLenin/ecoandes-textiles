@@ -178,6 +178,9 @@ export default function Shop() {
                 <i className="fa-solid fa-magnifying-glass" />
                 <h2>No se encontraron productos</h2>
                 <p>Prueba con otros filtros o términos de búsqueda.</p>
+                <button className="btn btn-primary" onClick={clearFilters} style={{ marginTop: '1rem' }}>
+                  <i className="fa-solid fa-rotate-left" /> Limpiar filtros
+                </button>
               </div>
             )}
           </div>

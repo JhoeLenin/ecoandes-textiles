@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ProductCard, { Stars } from '../components/ProductCard';
+import { ProductDetailSkeleton } from '../components/Skeleton';
 import { useCatalog, productImg, discountPct, formatPrice } from '../context/CatalogContext';
 import { useVendedor } from '../hooks/useVendedores';
 import { useCart } from '../context/CartContext';
@@ -20,7 +21,7 @@ export default function Product() {
     window.scrollTo(0, 0);
   }, [id]);
 
-  if (loading) return <div className="admin-loading">Cargando producto...</div>;
+  if (loading) return <ProductDetailSkeleton />;
 
   if (!product) {
     return (

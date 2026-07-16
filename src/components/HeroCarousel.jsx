@@ -1,33 +1,41 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { useCatalog } from '../context/CatalogContext';
 
+// catName se resuelve al id real de la categoría en Firestore.
 const SLIDES = [
   {
     img: '/img/hero.jpg',
     eyebrow: 'Hecho a mano en Arequipa',
     title: 'Artesanía que conecta con la tierra',
     text: 'Textiles arequipeños tejidos a mano con alpaca, algodón y lana, preservando técnicas ancestrales andinas.',
-    cta: { to: '/tienda', label: 'Ver Catálogo' },
+    cta: { catName: null, label: 'Ver Catálogo' },
   },
   {
     img: '/img/cat-01.jpg',
     eyebrow: 'Colección Alpaca',
     title: 'Abrígate con fibra de los Andes',
     text: 'Chompas, bufandas y chullos tejidos con alpaca suave y cálida. Tallas para toda la familia.',
-    cta: { to: '/tienda?cat=CAT-01', label: 'Ver Ropa' },
+    cta: { catName: 'Ropa', label: 'Ver Ropa' },
   },
   {
     img: '/img/cat-02.jpg',
     eyebrow: 'Hogar Andino',
     title: 'Tu casa con alma artesanal',
     text: 'Mantas, cojines y alfombras con patrones tradicionales que transforman cualquier espacio.',
-    cta: { to: '/tienda?cat=CAT-04', label: 'Ver Hogar' },
+    cta: { catName: 'Hogar', label: 'Ver Hogar' },
   },
 ];
 
 const INTERVAL = 5000;
 
 export default function HeroCarousel() {
+  const { categories } = useCatalog();
+  const catLink = useCallback((catName) => {
+    if (!catName) return '/tienda';
+    const cat = categories.find((c) => c.name === catName);
+    return cat ? `/tienda?cat=${cat.id}` : '/tienda';
+  }, [categories]);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef(null);
@@ -59,7 +67,7 @@ export default function HeroCarousel() {
             <span className="carousel-eyebrow">{s.eyebrow}</span>
             <h1>{s.title}</h1>
             <p>{s.text}</p>
-            <Link to={s.cta.to} className="btn btn-primary btn-lg">
+            <Link to={catLink(s.cta.catName)} className="btn btn-primary btn-lg">
               {s.cta.label} <i className="fa-solid fa-arrow-right" />
             </Link>
           </div>
