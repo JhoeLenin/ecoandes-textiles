@@ -37,7 +37,7 @@ export default function Shop() {
     if (sort === 'price-desc') l.sort((a, b) => b.priceOffer - a.priceOffer);
     if (sort === 'name-asc') l.sort((a, b) => a.name.localeCompare(b.name, 'es'));
     return l;
-  }, [category, sort, search, genero, vendedorId]);
+  }, [PRODUCTS, CATEGORIES, category, sort, search, genero, vendedorId]);
 
   const clearVendedor = () => {
     const next = new URLSearchParams(params);
