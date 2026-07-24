@@ -1,8 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useProducts } from '../../hooks/useProducts';
-import { useCategories } from '../../hooks/useCategories';
 import { REORDER_POINT } from '../../data/scm';
+import { CATEGORIES } from '../../data/products';
 import { formatPrice } from '../../context/CatalogContext';
+
+// Los productos referencian la categoría por su slug (CAT-0X), no por el docId
+// de la colección Firestore, así que resolvemos el nombre con el catálogo base.
+const CAT_NAME = Object.fromEntries(CATEGORIES.map((c) => [c.id, c.name]));
 
 function estadoStock(stock) {
   if (stock <= 0) return { label: 'Agotado', cls: 'badge-danger' };
@@ -12,7 +16,6 @@ function estadoStock(stock) {
 
 export default function Inventario() {
   const { products, loading } = useProducts();
-  const { categories } = useCategories();
 
   if (loading) return <div className="admin-loading">Cargando inventario...</div>;
 
@@ -67,12 +70,11 @@ export default function Inventario() {
           </thead>
           <tbody>
             {ordenados.map((p) => {
-              const cat = categories.find((c) => c.id === p.category);
               const st = estadoStock(p.stock || 0);
               return (
                 <tr key={p.docId || p.id}>
                   <td>{p.name}</td>
-                  <td>{cat?.name || '—'}</td>
+                  <td>{CAT_NAME[p.category] || '—'}</td>
                   <td>{p.stock || 0}</td>
                   <td>{REORDER_POINT}</td>
                   <td><span className={`badge ${st.cls}`}>{st.label}</span></td>
