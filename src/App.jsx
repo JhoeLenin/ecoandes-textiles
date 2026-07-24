@@ -24,6 +24,9 @@ import Offers from './pages/admin/Offers';
 import Orders from './pages/admin/Orders';
 import Users from './pages/admin/Users';
 import VendedoresAdmin from './pages/admin/Vendedores';
+import Proveedores from './pages/admin/Proveedores';
+import OrdenesCompra from './pages/admin/OrdenesCompra';
+import Inventario from './pages/admin/Inventario';
 import Clientes from './pages/admin/Clientes';
 import Campanas from './pages/admin/Campanas';
 import Reclamos from './pages/admin/Reclamos';
@@ -116,6 +119,9 @@ export default function App() {
                 <Route path="pedidos" element={<Orders />} />
                 <Route path="usuarios" element={<Users />} />
                 <Route path="vendedores" element={<VendedoresAdmin />} />
+                <Route path="proveedores" element={<Proveedores />} />
+                <Route path="ordenes-compra" element={<OrdenesCompra />} />
+                <Route path="inventario" element={<Inventario />} />
                 <Route path="clientes" element={<Clientes />} />
                 <Route path="campanas" element={<Campanas />} />
                 <Route path="reclamos" element={<Reclamos />} />

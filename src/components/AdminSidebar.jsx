@@ -27,6 +27,14 @@ const navGroups = [
     ],
   },
   {
+    title: 'SCM',
+    links: [
+      { to: '/admin/inventario', icon: 'fa-boxes-stacked', label: 'Inventario' },
+      { to: '/admin/proveedores', icon: 'fa-truck-field', label: 'Proveedores' },
+      { to: '/admin/ordenes-compra', icon: 'fa-file-invoice', label: 'Órdenes de Compra' },
+    ],
+  },
+  {
     title: 'CRM',
     links: [
       { to: '/admin/clientes', icon: 'fa-address-book', label: 'Clientes' },
