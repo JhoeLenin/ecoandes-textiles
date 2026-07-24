@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, getDocs } from 'firebase/firestore';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -26,6 +27,16 @@ if (missing.length) {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+
+// Proveedores demo (cadena de suministro textil artesanal).
+const PROVEEDORES = [
+  { name: 'Alpacas del Sur S.A.C.',        ruc: '20456789012', category: 'Lana de alpaca',      contactName: 'Rosa Mamani',   email: 'ventas@alpacasdelsur.pe',  phone: '958111222', leadTimeDays: 7,  status: 'activo' },
+  { name: 'Hilandería Arequipa E.I.R.L.',  ruc: '20567890123', category: 'Hilos y tintes',      contactName: 'Carlos Ticona', email: 'pedidos@hilanderiaaqp.pe', phone: '958222333', leadTimeDays: 5,  status: 'activo' },
+  { name: 'Algodón Nativo Perú',           ruc: '20678901234', category: 'Algodón orgánico',    contactName: 'Elena Ríos',    email: 'contacto@algodonnativo.pe',phone: '958333444', leadTimeDays: 10, status: 'activo' },
+  { name: 'Accesorios Textiles JLBR',      ruc: '20789012345', category: 'Cierres y herrajes',  contactName: 'Luis Choque',   email: 'ventas@accesoriosjlbr.pe', phone: '958444555', leadTimeDays: 3,  status: 'activo' },
+  { name: 'Tejidos Comunales Cabana',      ruc: '20890123456', category: 'Telar artesanal',     contactName: 'Ana Huamán',    email: 'comunidad@cabana.pe',      phone: '958555666', leadTimeDays: 14, status: 'inactivo' },
+];
 
 // ── Cloudinary ──────────────────────────────────────────────
 const CLOUD_NAME = process.env.VITE_CLOUDINARY_CLOUD_NAME;
@@ -574,6 +585,15 @@ const NEWSLETTER = [
 async function seed() {
   console.log('Poblando Firestore (idempotente)...\n');
 
+  // Las reglas exigen sesión iniciada para escribir. Autenticar como admin.
+  const adminPass = process.env.ADMIN_PASSWORD;
+  if (!adminPass) {
+    console.error('Falta ADMIN_PASSWORD en .env (las reglas exigen auth para escribir).');
+    process.exit(1);
+  }
+  await signInWithEmailAndPassword(auth, 'admin@ecoandes.com', adminPass);
+  console.log('Autenticado como admin@ecoandes.com\n');
+
   await uploadAllImages();
   replaceImagePaths();
 
@@ -660,6 +680,41 @@ async function seed() {
     for (const n of NEWSLETTER) {
       const ref = await addDoc(collection(db, 'newsletter'), { ...n, createdAt: now() });
       console.log(`  ✓ ${n.email} (${ref.id})`);
+    }
+  });
+
+  // ── SCM: proveedores ──
+  const proveedorRefs = [];
+  await seedIfEmpty('proveedores', 'proveedores', async () => {
+    for (const p of PROVEEDORES) {
+      const ref = await addDoc(collection(db, 'proveedores'), { ...p, createdAt: now() });
+      proveedorRefs.push({ id: ref.id, name: p.name });
+      console.log(`  ✓ ${p.name} (${ref.id})`);
+    }
+  });
+
+  // ── SCM: órdenes de compra (referencian productos reales de Firestore) ──
+  await seedIfEmpty('ordenesCompra', 'ordenes de compra', async () => {
+    if (!proveedorRefs.length) { console.log('  ⏭  requieren proveedores nuevos, se omiten.'); return; }
+    const prodSnap = await getDocs(collection(db, 'products'));
+    const prods = prodSnap.docs.slice(0, 6).map((d) => ({ id: d.id, ...d.data() }));
+    if (prods.length < 3) { console.log('  ⏭  no hay productos suficientes, se omiten.'); return; }
+    const mkItem = (p, qty) => ({ productId: p.id, name: p.name, qty, unitCost: Number(p.priceList) || 0 });
+    const totalOf = (its) => its.reduce((s, i) => s + i.qty * i.unitCost, 0);
+
+    const ocs = [
+      { prov: proveedorRefs[0], items: [mkItem(prods[0], 20), mkItem(prods[1], 15)], status: 'solicitado' },
+      { prov: proveedorRefs[1], items: [mkItem(prods[2], 30)],                        status: 'aprobado' },
+      { prov: proveedorRefs[2], items: [mkItem(prods[3], 25), mkItem(prods[4], 10)], status: 'recibido', receivedAt: now() },
+    ];
+    for (const oc of ocs) {
+      const ref = await addDoc(collection(db, 'ordenesCompra'), {
+        proveedorId: oc.prov.id, proveedorName: oc.prov.name,
+        items: oc.items, total: totalOf(oc.items),
+        status: oc.status, ...(oc.receivedAt ? { receivedAt: oc.receivedAt } : {}),
+        createdAt: now(),
+      });
+      console.log(`  ✓ OC ${oc.prov.name} — ${oc.status} — S/ ${totalOf(oc.items)} (${ref.id})`);
     }
   });
 
